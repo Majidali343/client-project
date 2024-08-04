@@ -14,22 +14,9 @@ function Employeetask() {
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [names, setNames] = useState([""]); // State for names
 
-  // Fetch data from API when the component mounts
-  useEffect(() => {
-    fetch("http://localhost:5000/employeesalary/get/Esalary")
-      .then(response => response.json())
-      .then(data => {
-        if (data) {
-          setNames(data.name || [""]);
-          setJobTitles(data.job_title || [null]);
-          setDates(data.date || [new Date()]);
-          setSalaries(data.salary || [null]);
-          setSalaryStatuses(data.salary_status || [null]);
-        }
-      })   
-      .catch(error => console.error("Error fetching data:", error));
-  }, []);
+  const[alljobs,setalljobs]= useState([""]);
 
+ 
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
   };
@@ -78,10 +65,32 @@ function Employeetask() {
       .then(response => response.json())
       .then(data => {
         console.log("Data submitted successfully:", data);
+        alldata();
         // Optionally, you can add a success message or handle further actions
       })
       .catch(error => console.error("Error submitting data:", error));
   };
+
+  const alldata = () =>{
+    fetch("http://localhost:5000/employeesalary/get/Esalary")
+    .then(response => response.json())
+    .then(data => {
+      setalljobs(data.rows);
+      if (data) {
+
+        setNames(data.name || [""]);
+        setJobTitles(data.job_title || [null]);
+        setDates(data.date || [new Date()]);
+        setSalaries(data.salary || [null]);
+        setSalaryStatuses(data.salary_status || [null]);
+      }
+    })   
+    .catch(error => console.error("Error fetching data:", error));
+  }
+   // Fetch data from API when the component mounts
+   useEffect(() => {
+    alldata();
+  }, []);
 
   return (
     <div className="bg-gray-100 h-screen flex">
@@ -304,13 +313,13 @@ function Employeetask() {
                   </tr>
                 ))}
                 {/* Empty rows */}
-                {[...Array(20)].map((_, index) => (
+                {alljobs.map((jobs,index) => (
                   <tr key={index} className="border-t">
-                    <td className="py-3 px-6 text-left text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
+                    <td className="py-3 px-6 text-left text-xs">{jobs.name}</td>
+                    <td className="py-3 px-6 text-center text-xs">{jobs.job_title}</td>
+                    <td className="py-3 px-6 text-center text-xs">{jobs.date}</td>
+                    <td className="py-3 px-6 text-center text-xs">{jobs.salary}</td>
+                    <td className="py-3 px-6 text-center text-xs">{jobs.salary_status}</td>
                   </tr>
                 ))}
               </tbody>
