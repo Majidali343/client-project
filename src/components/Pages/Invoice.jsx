@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { Link } from "react-router-dom";
 import Logo from "../Pages/images/logo.jpeg";
 import Notification from "../Pages/images/Notification.png"
@@ -12,8 +12,10 @@ function Employeetask() {
   const [dates, setDates] = useState([new Date()]); // Default date for the first row 
   const [advances, setAdvances] = useState([null]); // Default value for advance
   const [pendings, setPendings] = useState([null]); // Default value for pending
+  const [names, setNames] = useState([""]); // State for names
   const [projectStatuses, setProjectStatuses] = useState([null]); // Default value for project statuses
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [taskData, setTaskData] = useState([]);
 
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
@@ -47,6 +49,60 @@ function Employeetask() {
     newDates[index] = date;
     setDates(newDates);
   };
+
+  const handleAdvanceChange = (value, index) => {
+    const newAdvances = [...advances];
+    newAdvances[index] = value;
+    setAdvances(newAdvances);
+  };
+
+  const handlePendingChange = (value, index) => {
+    const newPendings = [...pendings];
+    newPendings[index] = value;
+    setPendings(newPendings);
+  };
+
+  const handleSubmit = async () => {
+    const formData = {
+      names,
+      vehicles,
+      descriptions,
+      dates,
+      advances,
+      pendings,
+      projectStatuses,
+    };
+
+    try {
+      const result = await fetch("http://localhost:5000/invoice/post/E-invoice", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      fetchData();
+
+      // Optionally handle response or update state after successful POST
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/invoice/get/E-invoice");
+      const data = await response.json();
+      setTaskData(data.rows);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="bg-gray-100 h-screen flex">
@@ -129,7 +185,7 @@ function Employeetask() {
           <div className="w-8 h-8  cursor-pointer hover:red-300">
                 <img src={Notification} alt="icon" />
               </div>
-          <button className="text-[#FFFF] bg-[#ea8732] ml-9 mr-9 border-0 py-1 px-2 w-28 focus:outline-none hover:bg-gray-200 rounded font-semibold text-sm">
+          <button className="text-[#FFFF] bg-[#ea8732] ml-9 mr-9 border-0 py-1 px-2 w-28 focus:outline-none hover:bg-gray-200 rounded font-semibold text-sm" onClick={handleSubmit}>
             + Add New
           </button>
         </header>
@@ -154,6 +210,7 @@ function Employeetask() {
                       type="text"
                       className="w-full py-1 px-2 border rounded"
                       placeholder="Enter Name"
+                      onChange={(e) => { setNames(e.target.value) }}
                     />
                   </td>
                   <td className="py-3 px-4 text-center text-xs">
@@ -294,13 +351,15 @@ function Employeetask() {
                   </td>
                 </tr>
                 {/* Empty rows */}
-                {[...Array(20)].map((_, index) => (
+                {taskData.map((invoice, index) => (
                   <tr key={index} className="border-t">
-                    <td className="py-3 px-6 text-left text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
+                    <td className="py-3 px-6 text-left text-xs">{invoice.name}</td>
+                    <td className="py-3 px-6 text-center text-xs">{invoice.vehicle}</td>
+                    <td className="py-3 px-6 text-center text-xs">{invoice.description}</td>
+                    <td className="py-3 px-6 text-center text-xs">{invoice.date}</td>
+                    <td className="py-3 px-6 text-center text-xs">{invoice.advance}</td>
+                    <td className="py-3 px-6 text-center text-xs">{invoice.pending}</td>
+                    <td className="py-3 px-6 text-center text-xs">{invoice.project_status}</td>
                   </tr>
                 ))}
               </tbody>
