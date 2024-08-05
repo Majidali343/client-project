@@ -11,6 +11,7 @@ function Employeetask() {
   const [taskStatus, setTaskStatus] = useState([null]); // Default value for task status
   const [dates, setDates] = useState([new Date()]); // Default date for the first row
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [taskdata, settaskdata] = useState(['']);
   const [formData, setFormData] = useState({
     name: "",
     location: "",
@@ -53,30 +54,34 @@ function Employeetask() {
 
   const handleSubmit = async () => {
     try {
-      await fetch("http://localhost:5000/employeetask/post/Etask", {
+    const reslt=  await fetch("http://localhost:5000/employeetask/post/Etask", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
+
+      fetchData();
+     
       // Optionally handle response or update state after successful POST
     } catch (error) {
       console.error("Error posting data:", error);
     }
   };
 
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/employeetask/get/Etask");
+      const data = await response.json();
+      settaskdata(data.rows)
+      
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
-    // Fetch initial data if needed
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/employeetask/get/Etask");
-        const data = await response.json();
-        // Handle data (populate table, etc.)
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
 
     fetchData();
   }, []);
@@ -90,9 +95,60 @@ function Employeetask() {
             src={Logo}
             alt="Logo"
           />
-          <nav>
-            {/* Navigation links */}
-            {/* ... */}
+         <nav>
+            <Link to="/">
+              <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
+                Dashboard
+              </button>
+            </Link>
+            <Link to="/Employeesalary">
+              <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
+                Employee Salary
+              </button>
+            </Link>
+            <Link to="/Employeetask">
+              <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
+                Employee Task
+              </button>
+            </Link>
+            <Link to="/Income">
+              <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
+                Income
+              </button>
+            </Link>
+            <Link to="/Expenses">
+              <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
+                Expenses
+              </button>
+            </Link>
+            <Link to="/Customer">
+              <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
+                Customers
+              </button>
+            </Link>
+            <Link to="/Vehicle">
+              <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
+                Vehicles
+              </button>
+            </Link>
+            <Link to="/Pending">
+              <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
+                Pending
+              </button>
+            </Link>
+            <Link to="/Invoice">
+              <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
+                Invoice
+              </button>
+            </Link>
+            <Link to="/Report">
+              <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
+                Report
+              </button>
+            </Link>
+            <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
+              Sign Out
+            </button>
           </nav>
         </div>
       </aside>
@@ -255,14 +311,14 @@ function Employeetask() {
                   </td>
                 </tr>
                 {/* Empty rows */}
-                {[...Array(20)].map((_, index) => (
+                {taskdata.map((task, index) => (
                   <tr key={index} className="border-t">
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
+                    <td className="py-3 px-6 text-center text-xs">{task.name}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.location}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.task}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.work_hours}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.date}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.task_status}</td>
                   </tr>
                 ))}
               </tbody>
