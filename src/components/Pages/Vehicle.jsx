@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import Logo from "../Pages/images/logo.jpeg";
 import Notification from "../Pages/images/Notification.png";
@@ -11,8 +11,10 @@ function Employeetask() {
   const [descriptions, setDescriptions] = useState([null]); // Default value for descriptions
   const [dates, setDates] = useState([new Date()]); // Default date for the first row
   const [locations, setLocations] = useState([null]); // Default value for locations
-  const [charges, setCharges] = useState([null]); // Default value for charges
+  const [charges, setCharges] = useState(''); // Default value for charges
+  const [names, setNames] = useState([""]); // State for names
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [taskData, setTaskData] = useState([]);
 
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
@@ -41,6 +43,48 @@ function Employeetask() {
     newDates[index] = date;
     setDates(newDates);
   };
+
+
+  const handleSubmit = async () => {
+    const formData = {
+      names,
+      vehicles,
+      descriptions,
+      dates,
+      locations,
+      charges,
+    };
+
+    try {
+      const result = await fetch("http://localhost:5000/vehicles/post/E-vehicles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      fetchData();
+
+      // Optionally handle response or update state after successful POST
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/vehicles/get/E-vehicles");
+      const data = await response.json();
+      setTaskData(data.rows);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="bg-gray-100 h-screen flex">
@@ -116,7 +160,7 @@ function Employeetask() {
               className="w-40 px-3 py-1 border rounded shadow-sm text-xs mr-4"
             />
             <img className="w-8 h-8 cursor-pointer hover:red-300 mr-4" src={Notification} alt="icon" />
-            <button className="text-white bg-[#ea8732] border-0 py-1 px-2 w-28 focus:outline-none hover:bg-gray-200 rounded font-semibold text-sm">
+            <button className="text-white bg-[#ea8732] border-0 py-1 px-2 w-28 focus:outline-none hover:bg-gray-200 rounded font-semibold text-sm" onClick={handleSubmit}>
               + Add New
             </button>
           </div>
@@ -141,6 +185,9 @@ function Employeetask() {
                       type="text"
                       className="w-full py-1 px-2 border rounded"
                       placeholder="Enter Name"
+                      onChange={(e) => {
+                        setNames(e.target.value);
+                      }}
                     />
                   </td>
                   <td className="py-3 px-4 text-center text-xs">
@@ -200,6 +247,9 @@ function Employeetask() {
                       type="text"
                       className="w-full py-1 px-2 border rounded"
                       placeholder="Enter Description"
+                      onChange={(e) => {
+                        setDescriptions(e.target.value);
+                      }}
                     />
                   </td>
                   <td className="py-3 px-4 text-center text-xs">
@@ -215,6 +265,9 @@ function Employeetask() {
                       type="text"
                       className="w-full py-1 px-2 border rounded"
                       placeholder="Enter Location"
+                      onChange={(e) => {
+                        setLocations(e.target.value);
+                      }}
                     />
                   </td>
                   <td className="py-3 px-4 text-center text-xs">
@@ -222,17 +275,21 @@ function Employeetask() {
                       type="NUMBER"
                       className="w-full py-1 px-2 border rounded"
                       placeholder="0"
+                      onChange={(e) => {
+                        setCharges(e.target.value);
+                      }}
                     />
                   </td>
                 </tr>
                                                 {/* Empty rows */}
-                                                {[...Array(20)].map((_, index) => (
+                                                {taskData.map((vehicle, index) => (
                   <tr key={index} className="border-t">
-                    <td className="py-3 px-6 text-left text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
+                    <td className="py-3 px-6 text-left text-xs">{vehicle.name}</td>
+                    <td className="py-3 px-6 text-center text-xs">{vehicle.vehicle}</td>
+                    <td className="py-3 px-6 text-center text-xs">{vehicle.description}</td>
+                    <td className="py-3 px-6 text-center text-xs">{vehicle.date}</td>
+                    <td className="py-3 px-6 text-center text-xs">{vehicle.location}</td>
+                    <td className="py-3 px-6 text-center text-xs">{vehicle.charges}</td>
                   </tr>
                 ))}
               </tbody>
