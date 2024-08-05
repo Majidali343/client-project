@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import Logo from "../Pages/images/logo.jpeg";
 import Notification from "../Pages/images/Notification.png";
@@ -13,6 +14,7 @@ function Employeetask() {
   const [descriptions, setDescriptions] = useState([""]); // State for descriptions
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [names, setNames] = useState([""]); // State for names
+  const [taskData, setTaskData] = useState([]);
 
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
@@ -42,6 +44,50 @@ function Employeetask() {
     newDescriptions[index] = value;
     setDescriptions(newDescriptions);
   };
+
+
+  const handleSubmit = async () => {
+    const formData = {
+      dates,
+      salaries,
+      salaryStatuses,
+      descriptions,
+      names,
+    };
+
+    try {
+      const result = await fetch("http://localhost:5000/income/post/E-income", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      
+
+      fetchData();
+
+      // Optionally handle response or update state after successful POST
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/income/get/E-income");
+      const data = await response.json();
+      setTaskData(data.rows);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
 
   return (
     <div className="bg-gray-100 h-screen flex">
@@ -124,7 +170,8 @@ function Employeetask() {
           <div className="w-8 h-8 cursor-pointer hover:red-300">
             <img src={Notification} alt="icon" />
           </div>
-          <button className="text-[#FFFF] bg-[#ea8732] ml-9 mr-9 border-0 py-1 px-2 w-28 focus:outline-none hover:bg-gray-200 rounded font-semibold text-sm">
+          <button className="text-[#FFFF] bg-[#ea8732] ml-9 mr-9 border-0 py-1 px-2 w-28 focus:outline-none hover:bg-gray-200 rounded font-semibold text-sm"
+          onClick={handleSubmit} >
             + Add New
           </button>
         </header>
@@ -230,13 +277,13 @@ function Employeetask() {
                   </tr>
                 ))}
                 {/* Empty rows */}
-                {[...Array(20)].map((_, index) => (
+                {taskData.map((task, index) => (
                   <tr key={index} className="border-t">
-                    <td className="py-3 px-6 text-left text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
-                    <td className="py-3 px-6 text-center text-xs"></td>
+                    <td className="py-3 px-6 text-left text-xs">{task.name}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.description}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.date}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.salary}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.salary_status}</td>
                   </tr>
                 ))}
               </tbody>
