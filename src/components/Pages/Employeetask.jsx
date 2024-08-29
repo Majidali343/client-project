@@ -12,18 +12,27 @@ function Employeetask() {
   const [dates, setDates] = useState([new Date()]); // Default date for the first row
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [taskdata, settaskdata] = useState(['']);
+  const [time, setTime] = useState('');
+
   const [formData, setFormData] = useState({
     name: "",
     location: "",
     task: "",
     work_hours: workHours[0],
     date: dates[0],
+    time: "",
     task_status: taskStatus[0]
   });
 
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
   };
+
+  const handleTimeChange = (event) => {
+    setTime(event.target.value);
+    setFormData({ ...formData, time: time });
+  };
+
 
   const handleWorkHoursChange = (hours, index) => {
     const newWorkHours = [...workHours];
@@ -40,6 +49,16 @@ function Employeetask() {
     setFormData({ ...formData, task_status: status }); // Update formData
     setDropdownOpen(null); // Close dropdown after selection
   };
+
+  const formatTime = (time) => {
+    const date = new Date(`1970-01-01T${time}Z`); // Convert the time string to a Date object
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    });
+  };
+
 
   const handleDateChange = (date, index) => {
     const newDates = [...dates];
@@ -184,11 +203,11 @@ function Employeetask() {
               <thead>
                 <tr>
                   <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-left">Employee Name</th>
-                  <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-left">Company</th>
                   <th className="py-3 px-10 bg-gray-200 text-[#3d3d3d] text-center">Location</th>
                   <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-center">Task</th>
                   <th className="py-3 px-8 bg-gray-200 text-[#3d3d3d] text-center">Work Hours</th>
                   <th className="py-3 px-16 bg-gray-200 text-[#3d3d3d] text-center">Date</th>
+                  <th className="py-3 px-16 bg-gray-200 text-[#3d3d3d] text-center">Time</th>
                   <th className="py-3 px-6 bg-gray-200 text-[#3d3d3d] text-center">Changes</th>
                 </tr>
               </thead>
@@ -202,16 +221,6 @@ function Employeetask() {
         onChange={handleInputChange}
         className="w-full py-1 px-2 border rounded"
         placeholder="Enter Employee"
-      />
-    </td>
-    <td className="py-3 px-6 text-left text-xs">
-      <input
-        type="text"
-        name="name"
-        value={formData.name}
-        onChange={handleInputChange}
-        className="w-full py-1 px-2 border rounded"
-        placeholder="Enter Company"
       />
     </td>
     <td className="py-3 px-6 text-center text-xs">
@@ -281,6 +290,13 @@ function Employeetask() {
         dateFormat="dd/MM/yyyy"
       />
     </td>
+    <td className="py-3 px-4 text-center text-xs">
+    <input
+          type="time"
+          value={time}
+          onChange={handleTimeChange}
+        />
+    </td>
     <td className="py-3 px-6 text-center text-xs">
       <div className="relative inline-block">
         <button
@@ -330,6 +346,7 @@ function Employeetask() {
       <td className="py-3 px-6 text-center text-xs">{task.task}</td>
       <td className="py-3 px-6 text-center text-xs">{task.work_hours}</td>
       <td className="py-3 px-6 text-center text-xs">{task.date}</td>
+      <td className="py-3 px-6 text-center text-xs">{formatTime(task.time)}</td>
       <td className="py-3 px-6 text-center text-xs">{task.task_status}</td>
     </tr>
   ))}

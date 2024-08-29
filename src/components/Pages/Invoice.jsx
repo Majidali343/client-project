@@ -18,6 +18,7 @@ function Employeetask() {
   const [projectStatuses, setProjectStatuses] = useState([null]); // Default value for project statuses
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [taskData, setTaskData] = useState([]);
+  const [time, setTime] = useState('');
 
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
@@ -52,6 +53,10 @@ function Employeetask() {
     setDates(newDates);
   };
 
+  const handleTimeChange = (event) => {
+    setTime(event.target.value);
+  };
+
   const handleAdvanceChange = (value, index) => {
     const newAdvances = [...advances];
     newAdvances[index] = value;
@@ -70,6 +75,7 @@ function Employeetask() {
       vehicles,
       descriptions,
       dates,
+      time,
       advances,
       pendings,
       projectStatuses,
@@ -90,6 +96,15 @@ function Employeetask() {
     } catch (error) {
       console.error("Error posting data:", error);
     }
+  };
+
+  const formatTime = (time) => {
+    const date = new Date(`1970-01-01T${time}Z`); // Convert the time string to a Date object
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    });
   };
 
   const fetchData = async () => {
@@ -203,6 +218,7 @@ function Employeetask() {
                   <th className="py-3 px-16 bg-gray-200 text-[#3d3d3d] text-center">Vehicle</th>
                   <th className="py-3 px-4 bg-gray-200 text-[#3d3d3d] text-center">Description</th>
                   <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-center">Date</th>
+                  <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-center">Time</th>
                   <th className="py-3 px-4 bg-gray-200 text-[#3d3d3d] text-center">Amount</th>
                   <th className="py-3 px-4 bg-gray-200 text-[#3d3d3d] text-center">Pending</th>
                   <th className="py-3 px-16 bg-gray-200 text-[#3d3d3d] text-center">Amount Status</th>
@@ -291,6 +307,13 @@ function Employeetask() {
       />
     </td>
     <td className="py-3 px-4 text-center text-xs">
+    <input
+          type="time"
+          value={time}
+          onChange={handleTimeChange}
+        />
+    </td>
+    <td className="py-3 px-4 text-center text-xs">
       <input
         type="number"
         className="w-full py-1 px-2 border rounded"
@@ -363,9 +386,20 @@ function Employeetask() {
       <td className="py-3 px-6 text-center text-xs">{invoice.vehicle}</td>
       <td className="py-3 px-6 text-center text-xs">{invoice.description}</td>
       <td className="py-3 px-6 text-center text-xs">{invoice.date}</td>
+      <td className="py-3 px-6 text-center text-xs"> {formatTime(invoice.time)}</td>
       <td className="py-3 px-6 text-center text-xs">{invoice.advance}</td>
       <td className="py-3 px-6 text-center text-xs">{invoice.pending}</td>
       <td className="py-3 px-6 text-center text-xs">{invoice.project_status}</td>
+    </tr>
+  ))}
+   {Array.from({ length: 20 }).map((_, index) => (
+    <tr key={index + taskData.length} className="border-t">
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
     </tr>
   ))}
 
