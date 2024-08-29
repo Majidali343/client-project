@@ -4,6 +4,8 @@ import Logo from "../Pages/images/logo.jpeg";
 import Notification from "../Pages/images/Notification.png";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from 'axios';
+import { saveAs } from 'file-saver';
 
 function Employeetask() {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -47,6 +49,18 @@ function Employeetask() {
         break;
     }
     setDropdownOpen(null); // Close dropdown after selection
+  };
+
+
+  const downloadExcel = () => {
+    axios.get('http://localhost:5000/customer/getexcelcustomer', { responseType: 'blob' })
+      .then((response) => {
+        const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, 'data.xlsx');
+      })
+      .catch((error) => {
+        console.error('There was an error downloading the Excel file!', error);
+      });
   };
 
   const handleDateChange = (date, index) => {
@@ -192,6 +206,7 @@ function Employeetask() {
                   <th className="py-3 px-8 bg-gray-200 text-[#3d3d3d] text-center">Contact</th>
                   <th className="py-3 px-7 bg-gray-200 text-[#3d3d3d] text-center">Amount</th>
                   <th className="py-3 px-7 bg-gray-200 text-[#3d3d3d] text-center">Customer</th>
+                  <th className="py-3 px-7 bg-gray-200 text-[#3d3d3d] text-center">Download data</th>
                 </tr>
               </thead>
               <tbody>
@@ -334,6 +349,9 @@ function Employeetask() {
       <td className="py-3 px-6 text-center text-xs">{customer.contact}</td>
       <td className="py-3 px-6 text-center text-xs">{customer.deals}</td>
       <td className="py-3 px-6 text-center text-xs">{customer.customer}</td>
+      <td className="py-3 px-6 text-center text-xs"> <button className='bg-green-900 p-1 rounded-md text-white font-medium' onClick={downloadExcel}>
+      Download Excel
+    </button></td>
     </tr>
   ))}
 
