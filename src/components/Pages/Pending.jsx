@@ -163,7 +163,7 @@ function Employeetask() {
             </Link>
             <Link to="/Report">
               <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
-                Report
+              Invoice Generate
               </button>
             </Link>
             <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
@@ -188,7 +188,7 @@ function Employeetask() {
             <img src={Notification} alt="icon" />
           </div>
           <button className="text-[#FFFF] bg-[#ea8732] ml-9 mr-9 border-0 py-1 px-2 w-28 focus:outline-none hover:bg-gray-200 rounded font-semibold text-sm" onClick={handleSubmit}>
-            + Add New
+          Submit
           </button>
         </header>
         <div className="flex-1 p-6 flex justify-center overflow-y-auto">
@@ -202,124 +202,138 @@ function Employeetask() {
                   <th className="py-3 px-4 bg-gray-200 text-[#3d3d3d] text-center">Advance</th>
                   <th className="py-3 px-4 bg-gray-200 text-[#3d3d3d] text-center">Pending</th>
                   <th className="py-3 px-7 bg-gray-200 text-[#3d3d3d] text-center">Total</th>
-                  <th className="py-3 px-4 bg-gray-200 text-[#3d3d3d] text-center">Payment Status</th>
+                  <th className="py-3 px-16 bg-gray-200 text-[#3d3d3d] text-center">Payment Status</th>
                 </tr>
               </thead>
               <tbody>
-                {names.map((name, index) => (
-                  <tr key={index} className="text-[#3d3d3d] border-t">
-                    <td className="py-3 px-4 text-left text-xs">
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => {
-                          const newNames = [...names];
-                          newNames[index] = e.target.value;
-                          setNames(newNames);
-                        }}
-                        className="w-full py-1 px-2 border rounded"
-                        placeholder="Enter Name"
-                      />
-                    </td>
-                    <td className="py-3 px-4 text-left text-xs">
-                      <input
-                        type="text"
-                        value={locations[index]}
-                        onChange={(e) => handleLocationChange(e.target.value, index)}
-                        className="w-full py-1 px-2 border rounded"
-                        placeholder="Enter Location"
-                      />
-                    </td>
-                    <td className="py-3 px-10 text-center text-xs">
-                      <DatePicker
-                        selected={dates[index]}
-                        onChange={(date) => handleDateChange(date, index)}
-                        className="w-full py-1 px-2 border rounded"
-                      />
-                    </td>
-                    <td className="py-3 px-4 text-center text-xs">
-                      <input
-                        type="number"
-                        value={advances[index] || ""}
-                        onChange={(e) => handleAdvanceChange(e.target.value, index)}
-                        className="w-full py-1 px-2 border rounded"
-                        placeholder="0"
-                      />
-                    </td>
-                    <td className="py-3 px-4 text-center text-xs">
-                      <input
-                        type="number"
-                        value={pendings[index] || ""}
-                        onChange={(e) => handlePendingChange(e.target.value, index)}
-                        className="w-full py-1 px-2 border rounded"
-                        placeholder="0"
-                      />
-                    </td>
-                    <td className="py-3 px-4 text-center text-xs">
-                      <input
-                        type="number"
-                        value={totals[index] || ""}
-                        onChange={(e) => handleTotalChange(e.target.value, index)}
-                        className="w-full py-1 px-2 border rounded"
-                        placeholder="0"
-                      />
-                    </td>
-                    <td className="py-3 px-4 text-center text-xs">
-                      <div className="relative inline-block">
-                        <button
-                          className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
-                          type="button"
-                          onClick={() => toggleDropdown(index)}
-                        >
-                          {paymentStatuses[index] || "Choose Status"}
-                          <svg
-                            className="w-2.5 h-2.5 ml-3"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 10 6"
-                          >
-                            <path
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="1.5"
-                              d="m1 1 4 4 4-4"
-                            />
-                          </svg>
-                        </button>
-                        {dropdownOpen === index && (
-                          <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg">
-                            <ul className="list-none m-0 p-0">
-                              {["Pending", "Successful"].map((status, i) => (
-                                <li
-                                  key={i}
-                                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                  onClick={() => handleDropdownChange(status, index, "paymentStatus")}
-                                >
-                                  {status}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
+  {names.map((name, index) => (
+    <tr key={index} className="text-[#3d3d3d] border-t">
+      <td className="py-3 px-4 text-left text-xs">
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => {
+            const newNames = [...names];
+            newNames[index] = e.target.value;
+            setNames(newNames);
+          }}
+          className="w-full py-1 px-2 border rounded"
+          placeholder="Enter Name"
+        />
+      </td>
+      <td className="py-3 px-4 text-left text-xs">
+        <input
+          type="text"
+          value={locations[index]}
+          onChange={(e) => handleLocationChange(e.target.value, index)}
+          className="w-full py-1 px-2 border rounded"
+          placeholder="Enter Location"
+        />
+      </td>
+      <td className="py-3 px-10 text-center text-xs">
+        <DatePicker
+          selected={dates[index]}
+          onChange={(date) => handleDateChange(date, index)}
+          className="w-full py-1 px-2 border rounded"
+        />
+      </td>
+      <td className="py-3 px-4 text-center text-xs">
+        <input
+          type="number"
+          value={advances[index] || ""}
+          onChange={(e) => handleAdvanceChange(e.target.value, index)}
+          className="w-full py-1 px-2 border rounded"
+          placeholder="0"
+        />
+      </td>
+      <td className="py-3 px-4 text-center text-xs">
+        <input
+          type="number"
+          value={pendings[index] || ""}
+          onChange={(e) => handlePendingChange(e.target.value, index)}
+          className="w-full py-1 px-2 border rounded"
+          placeholder="0"
+        />
+      </td>
+      <td className="py-3 px-4 text-center text-xs">
+        <input
+          type="number"
+          value={totals[index] || ""}
+          onChange={(e) => handleTotalChange(e.target.value, index)}
+          className="w-full py-1 px-2 border rounded"
+          placeholder="0"
+        />
+      </td>
+      <td className="py-3 px-4 text-center text-xs">
+        <div className="relative inline-block">
+          <button
+            className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
+            type="button"
+            onClick={() => toggleDropdown(index)}
+          >
+            {paymentStatuses[index] || "Choose Status"}
+            <svg
+              className="w-2.5 h-2.5 ml-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="m1 1 4 4 4-4"
+              />
+            </svg>
+          </button>
+          {dropdownOpen === index && (
+            <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg">
+              <ul className="list-none m-0 p-0">
+                {["Pending", "Successful"].map((status, i) => (
+                  <li
+                    key={i}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleDropdownChange(status, index, "paymentStatus")}
+                  >
+                    {status}
+                  </li>
                 ))}
-                {/* Empty rows */}
-                {taskData.map((pending, index) => (
-                  <tr key={index} className="border-t">
-                    <td className="py-3 px-6 text-left text-xs">{pending.name}</td>
-                    <td className="py-3 px-6 text-left text-xs">{pending.location}</td>
-                    <td className="py-3 px-6 text-center text-xs">{pending.date}</td>
-                    <td className="py-3 px-6 text-center text-xs">{pending.advance}</td>
-                    <td className="py-3 px-6 text-center text-xs">{pending.pending}</td>
-                    <td className="py-3 px-6 text-center text-xs">{pending.total}</td>
-                    <td className="py-3 px-6 text-center text-xs">{pending.payment_status}</td>
-                  </tr>
-                ))}
-              </tbody>
+              </ul>
+            </div>
+          )}
+        </div>
+      </td>
+    </tr>
+  ))}
+  
+  {/* Data Rows */}
+  {taskData.map((pending, index) => (
+    <tr key={index} className="border-t">
+      <td className="py-3 px-6 text-left text-xs">{pending.name}</td>
+      <td className="py-3 px-6 text-left text-xs">{pending.location}</td>
+      <td className="py-3 px-6 text-center text-xs">{pending.date}</td>
+      <td className="py-3 px-6 text-center text-xs">{pending.advance}</td>
+      <td className="py-3 px-6 text-center text-xs">{pending.pending}</td>
+      <td className="py-3 px-6 text-center text-xs">{pending.total}</td>
+      <td className="py-3 px-6 text-center text-xs">{pending.payment_status}</td>
+    </tr>
+  ))}
+
+  {/* Empty Rows */}
+  {[...Array(2)].map((_, index) => (
+    <tr key={index} className="border-t">
+      <td className="py-3 px-6 text-left text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-left text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+    </tr>
+  ))}
+</tbody>
             </table>
           </div>
         </div>

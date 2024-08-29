@@ -5,6 +5,7 @@ import Notification from "../components/Pages/images/Notification.png"
 
 function Home() {
   return (
+    
     <body>
       <div className="bg-gray-100 h-screen flex">
         <aside className="w-64 bg-white text-white flex-shrink-0">
@@ -62,7 +63,7 @@ function Home() {
               </Link>
               <Link to="/Report">
                 <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
-                  Report
+                  Invoice Generate
                 </button>
               </Link>
               <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
@@ -79,11 +80,11 @@ function Home() {
               <div className="flex-grow"></div>
               <div className="flex gap-6">
               <div className="flex space-x-4 text-xs">
-                <input
+                {/* <input
                   type="text"
                   placeholder="Search"
                   className="px-4 py-1 border rounded"
-                />
+                /> */}
               </div>
               <div className="w-8 h-8 cursor-pointer hover:red-300">
                 <img src={Notification} alt="icon" />

@@ -143,7 +143,7 @@ function Employeetask() {
             </Link>
             <Link to="/Report">
               <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
-                Report
+              Invoice Generate
               </button>
             </Link>
             <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
@@ -173,7 +173,7 @@ function Employeetask() {
                 className="text-[#FFFF] bg-[#ea8732] border-0 py-1 px-2 w-28 focus:outline-none hover:bg-gray-200 rounded font-semibold text-sm"
                 onClick={handleSubmit} // Attach submit handler
               >
-                + Add New
+                Submit
               </button>
             </div>
           </div>
@@ -183,145 +183,170 @@ function Employeetask() {
             <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
               <thead>
                 <tr>
-                  <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-left">Name</th>
-                  <th className="py-3 px-6 bg-gray-200 text-[#3d3d3d] text-center">Location</th>
-                  <th className="py-3 px-6 bg-gray-200 text-[#3d3d3d] text-center">Task</th>
+                  <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-left">Employee Name</th>
+                  <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-left">Company</th>
+                  <th className="py-3 px-10 bg-gray-200 text-[#3d3d3d] text-center">Location</th>
+                  <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-center">Task</th>
                   <th className="py-3 px-8 bg-gray-200 text-[#3d3d3d] text-center">Work Hours</th>
-                  <th className="py-3 px-6 bg-gray-200 text-[#3d3d3d] text-center">Date</th>
-                  <th className="py-3 px-6 bg-gray-200 text-[#3d3d3d] text-center">Task Status</th>
+                  <th className="py-3 px-16 bg-gray-200 text-[#3d3d3d] text-center">Date</th>
+                  <th className="py-3 px-6 bg-gray-200 text-[#3d3d3d] text-center">Changes</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr className="text-[#3d3d3d] border-t">
-                  <td className="py-3 px-6 text-left text-xs">
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="w-full py-1 px-2 border rounded"
-                      placeholder="Enter Name"
-                    />
-                  </td>
-                  <td className="py-3 px-6 text-center text-xs">
-                    <input
-                      type="text"
-                      name="location"
-                      value={formData.location}
-                      onChange={handleInputChange}
-                      className="w-full py-1 px-2 border rounded"
-                      placeholder="Enter Location"
-                    />
-                  </td>
-                  <td className="py-3 px-6 text-center text-xs">
-                    <input
-                      type="text"
-                      name="task"
-                      value={formData.task}
-                      onChange={handleInputChange}
-                      className="w-full py-1 px-2 border rounded"
-                      placeholder="Enter Task"
-                    />
-                  </td>
-                  <td className="py-3 px-6 text-center text-xs">
-                    <div className="relative inline-block">
-                      <button
-                        className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
-                        type="button"
-                        onClick={() => toggleDropdown(0)}
-                      >
-                        {workHours[0] || "Choose"}
-                        <svg
-                          className="w-2.5 h-2.5 ml-3"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 10 6"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="1.5"
-                            d="m1 1 4 4 4-4"
-                          />
-                        </svg>
-                      </button>
-                      {dropdownOpen === 0 && (
-                        <div className="absolute mt-2 w-24 py-1 bg-white border border-gray-300 rounded shadow-lg">
-                          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((hours) => (
-                            <button
-                              key={hours}
-                              onClick={() => handleWorkHoursChange(hours, 0)}
-                              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-200"
-                            >
-                              {hours} Hour{hours > 1 ? 's' : ''}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                  <td className="py-3 px-6 text-center text-xs">
-                    <DatePicker
-                      selected={dates[0]}
-                      onChange={(date) => handleDateChange(date, 0)}
-                      className="text-center bg-white border rounded w-full py-1 px-3"
-                      dateFormat="dd/MM/yyyy"
-                    />
-                  </td>
-                  <td className="py-3 px-6 text-center text-xs">
-                    <div className="relative inline-block">
-                      <button
-                        className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
-                        type="button"
-                        onClick={() => toggleDropdown(1)}
-                      >
-                        {taskStatus[0] || "Choose"}
-                        <svg
-                          className="w-2.5 h-2.5 ml-3"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 10 6"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="1.5"
-                            d="m1 1 4 4 4-4"
-                          />
-                        </svg>
-                      </button>
-                      {dropdownOpen === 1 && (
-                        <div className="absolute mt-2 w-full py-1 bg-white border border-gray-300 rounded shadow-lg">
-                          {["Pending", "Completed"].map((status) => (
-                            <button
-                              key={status}
-                              onClick={() => handleTaskStatusChange(status, 0)}
-                              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-200"
-                            >
-                              {status}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-                {/* Empty rows */}
-                {taskdata.map((task, index) => (
-                  <tr key={index} className="border-t">
-                    <td className="py-3 px-6 text-center text-xs">{task.name}</td>
-                    <td className="py-3 px-6 text-center text-xs">{task.location}</td>
-                    <td className="py-3 px-6 text-center text-xs">{task.task}</td>
-                    <td className="py-3 px-6 text-center text-xs">{task.work_hours}</td>
-                    <td className="py-3 px-6 text-center text-xs">{task.date}</td>
-                    <td className="py-3 px-6 text-center text-xs">{task.task_status}</td>
-                  </tr>
-                ))}
-              </tbody>
+             <tbody>
+  <tr className="text-[#3d3d3d] border-t">
+    <td className="py-3 px-6 text-left text-xs">
+      <input
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleInputChange}
+        className="w-full py-1 px-2 border rounded"
+        placeholder="Enter Employee"
+      />
+    </td>
+    <td className="py-3 px-6 text-left text-xs">
+      <input
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleInputChange}
+        className="w-full py-1 px-2 border rounded"
+        placeholder="Enter Company"
+      />
+    </td>
+    <td className="py-3 px-6 text-center text-xs">
+      <input
+        type="text"
+        name="location"
+        value={formData.location}
+        onChange={handleInputChange}
+        className="w-full py-1 px-2 border rounded"
+        placeholder="Enter Location"
+      />
+    </td>
+    <td className="py-3 px-6 text-center text-xs">
+      <input
+        type="text"
+        name="task"
+        value={formData.task}
+        onChange={handleInputChange}
+        className="w-full py-1 px-2 border rounded"
+        placeholder="Enter Task"
+      />
+    </td>
+    <td className="py-3 px-6 text-center text-xs">
+      <div className="relative inline-block">
+        <button
+          className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
+          type="button"
+          onClick={() => toggleDropdown(0)}
+        >
+          {workHours[0] || "Choose"}
+          <svg
+            className="w-2.5 h-2.5 ml-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.5"
+              d="m1 1 4 4 4-4"
+            />
+          </svg>
+        </button>
+        {dropdownOpen === 0 && (
+          <div className="absolute mt-2 w-24 py-1 bg-white border border-gray-300 rounded shadow-lg">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((hours) => (
+              <button
+                key={hours}
+                onClick={() => handleWorkHoursChange(hours, 0)}
+                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-200"
+              >
+                {hours} Hour{hours > 1 ? 's' : ''}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </td>
+    <td className="py-3 px-6 text-center text-xs">
+      <DatePicker
+        selected={dates[0]}
+        onChange={(date) => handleDateChange(date, 0)}
+        className="text-center bg-white border rounded w-full py-1 px-3"
+        dateFormat="dd/MM/yyyy"
+      />
+    </td>
+    <td className="py-3 px-6 text-center text-xs">
+      <div className="relative inline-block">
+        <button
+          className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
+          type="button"
+          onClick={() => toggleDropdown(1)}
+        >
+          {taskStatus[0] || "Choose"}
+          <svg
+            className="w-2.5 h-2.5 ml-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 6"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.5"
+              d="m1 1 4 4 4-4"
+            />
+          </svg>
+        </button>
+        {dropdownOpen === 1 && (
+          <div className="absolute mt-2 w-full py-1 bg-white border border-gray-300 rounded shadow-lg">
+            {["Pending", "Completed"].map((status) => (
+              <button
+                key={status}
+                onClick={() => handleTaskStatusChange(status, 0)}
+                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-200"
+              >
+                {status}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </td>
+  </tr>
+
+  {/* Existing task data rows */}
+  {taskdata.map((task, index) => (
+    <tr key={index} className="border-t">
+      <td className="py-3 px-6 text-center text-xs">{task.name}</td>
+      <td className="py-3 px-6 text-center text-xs">{task.location}</td>
+      <td className="py-3 px-6 text-center text-xs">{task.task}</td>
+      <td className="py-3 px-6 text-center text-xs">{task.work_hours}</td>
+      <td className="py-3 px-6 text-center text-xs">{task.date}</td>
+      <td className="py-3 px-6 text-center text-xs">{task.task_status}</td>
+    </tr>
+  ))}
+
+  {/* Adding 10 empty rows */}
+  {Array.from({ length: 20 }).map((_, index) => (
+    <tr key={index + taskdata.length} className="border-t">
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+    </tr>
+  ))}
+</tbody>
+
             </table>
           </div>
         </div>

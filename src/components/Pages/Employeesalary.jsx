@@ -149,7 +149,7 @@ function Employeetask() {
             </Link>
             <Link to="/Report">
               <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
-                Report
+              Invoice Generate
               </button>
             </Link>
             <button className="block text-[#3d3d3d] text-sm py-2.5 px-4 rounded hover:bg-[#ea8732] hover:text-white font-bold w-full text-left">
@@ -162,13 +162,13 @@ function Employeetask() {
         <header className="bg-white shadow p-7 flex items-center">
           <h2 className="text-xl font-bold text-[#3d3d3d] flex-1">Employee Salary</h2>
           <div className="flex-1 flex justify-center ml-">
-            <input
+            {/* <input
               type="text"
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs"
-            />
+            /> */}
           </div>
           <div className="w-8 h-8 cursor-pointer hover:red-300">
             <img src={Notification} alt="icon" />
@@ -186,143 +186,162 @@ function Employeetask() {
               <thead>
                 <tr>
                   <th className="py-3 px-16 bg-gray-200 text-[#3d3d3d] text-left">Name</th>
-                  <th className="py-3 px-4 bg-gray-200 text-[#3d3d3d] text-center">Job Title</th>
+                  <th className="py-3 px-16 bg-gray-200 text-[#3d3d3d] text-center">Job Title</th>
                   <th className="py-3 px-10 bg-gray-200 text-[#3d3d3d] text-center">Date</th>
                   <th className="py-3 px-4 bg-gray-200 text-[#3d3d3d] text-center">Salary</th>
-                  <th className="py-3 px-4 bg-gray-200 text-[#3d3d3d] text-center">Salary Status</th>
+                  <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-center">Salary Status</th>
                 </tr>
               </thead>
               <tbody>
-                {names.map((name, index) => (
-                  <tr key={index} className="text-[#3d3d3d] border-t">
-                    <td className="py-3 px-4 text-center text-xs">
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => {
-                          const newNames = [...names];
-                          newNames[index] = e.target.value;
-                          setNames(newNames);
-                        }}
-                        className="w-full py-1 px-2 border rounded"
-                        placeholder="Enter Name"
-                      />
-                    </td>
-                    <td className="py-3 px-4 text-left text-xs">
-                      <div className="relative inline-block">
-                        <button
-                          className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
-                          type="button"
-                          onClick={() => toggleDropdown(index)}
-                        >
-                          {jobTitles[index] || "Choose Job Title"}
-                          <svg
-                            className="w-2.5 h-2.5 ml-3"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 10 6"
-                          >
-                            <path
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="1.5"
-                              d="m1 1 4 4 4-4"
-                            />
-                          </svg>
-                        </button>
-                        {dropdownOpen === index && (
-                          <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg">
-                            <ul className="list-none m-0 p-0">
-                              {["Crane operator", "Forklift operator", "Boom loader operator", "Mechanic", "Manager", "Accountant"].map((title, i) => (
-                                <li
-                                  key={i}
-                                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                  onClick={() => handleDropdownChange(title, index, "jobTitle")}
-                                >
-                                  {title}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-3 px-10 text-center text-xs">
-                      <DatePicker
-                        selected={dates[index]}
-                        onChange={(date) => handleDateChange(date, index)}
-                        className="w-full py-1 px-2 border rounded"
-                      />
-                    </td>
-                    <td className="py-3 px-4 text-center text-xs">
-                      <input
-                        type="number"
-                        value={salaries[index] || ""}
-                        onChange={(e) => {
-                          const newSalaries = [...salaries];
-                          newSalaries[index] = e.target.value;
-                          setSalaries(newSalaries);
-                        }}
-                        className="w-full py-1 px-2 border rounded"
-                        placeholder="0"
-                      />
-                    </td>
-                    <td className="py-3 px-4 text-center text-xs">
-                      <div className="relative inline-block">
-                        <button
-                          className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
-                          type="button"
-                          onClick={() => toggleDropdown(index + 100)} // Use an offset to differentiate salary status dropdowns
-                        >
-                          {salaryStatuses[index] || "Choose Status"}
-                          <svg
-                            className="w-2.5 h-2.5 ml-3"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 10 6"
-                          >
-                            <path
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="1.5"
-                              d="m1 1 4 4 4-4"
-                            />
-                          </svg>
-                        </button>
-                        {dropdownOpen === index + 100 && (
-                          <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg">
-                            <ul className="list-none m-0 p-0">
-                              {["Pending", "Paid"].map((status, i) => (
-                                <li
-                                  key={i}
-                                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                                  onClick={() => handleDropdownChange(status, index, "salaryStatus")}
-                                >
-                                  {status}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
+  {names.map((name, index) => (
+    <tr key={index} className="text-[#3d3d3d] border-t">
+      <td className="py-3 px-4 text-center text-xs">
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => {
+            const newNames = [...names];
+            newNames[index] = e.target.value;
+            setNames(newNames);
+          }}
+          className="w-full py-1 px-2 border rounded"
+          placeholder="Enter Name"
+        />
+      </td>
+      <td className="py-3 px-4 text-left text-xs">
+        <div className="relative inline-block">
+          <button
+            className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
+            type="button"
+            onClick={() => toggleDropdown(index)}
+          >
+            {jobTitles[index] || "Choose Job Title"}
+            <svg
+              className="w-2.5 h-2.5 ml-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="m1 1 4 4 4-4"
+              />
+            </svg>
+          </button>
+          {dropdownOpen === index && (
+            <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg">
+              <ul className="list-none m-0 p-0">
+                {[
+                  "Crane operator",
+                  "Forklift operator",
+                  "Boom loader operator",
+                  "Mechanic",
+                  "Manager",
+                  "Accountant",
+                ].map((title, i) => (
+                  <li
+                    key={i}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleDropdownChange(title, index, "jobTitle")}
+                  >
+                    {title}
+                  </li>
                 ))}
-                {/* Empty rows */}
-                {alljobs.map((jobs,index) => (
-                  <tr key={index} className="border-t">
-                    <td className="py-3 px-6 text-left text-xs">{jobs.name}</td>
-                    <td className="py-3 px-6 text-center text-xs">{jobs.job_title}</td>
-                    <td className="py-3 px-6 text-center text-xs">{jobs.date}</td>
-                    <td className="py-3 px-6 text-center text-xs">{jobs.salary}</td>
-                    <td className="py-3 px-6 text-center text-xs">{jobs.salary_status}</td>
-                  </tr>
+              </ul>
+            </div>
+          )}
+        </div>
+      </td>
+      <td className="py-3 px-10 text-center text-xs">
+        <DatePicker
+          selected={dates[index]}
+          onChange={(date) => handleDateChange(date, index)}
+          className="w-full py-1 px-2 border rounded"
+        />
+      </td>
+      <td className="py-3 px-4 text-center text-xs">
+        <input
+          type="number"
+          value={salaries[index] || ""}
+          onChange={(e) => {
+            const newSalaries = [...salaries];
+            newSalaries[index] = e.target.value;
+            setSalaries(newSalaries);
+          }}
+          className="w-full py-1 px-2 border rounded"
+          placeholder="0"
+        />
+      </td>
+      <td className="py-3 px-4 text-center text-xs">
+        <div className="relative inline-block">
+          <button
+            className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
+            type="button"
+            onClick={() => toggleDropdown(index + 100)}
+          >
+            {salaryStatuses[index] || "Choose Status"}
+            <svg
+              className="w-2.5 h-2.5 ml-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 10 6"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="m1 1 4 4 4-4"
+              />
+            </svg>
+          </button>
+          {dropdownOpen === index + 100 && (
+            <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg">
+              <ul className="list-none m-0 p-0">
+                {["Pending", "Paid"].map((status, i) => (
+                  <li
+                    key={i}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleDropdownChange(status, index, "salaryStatus")}
+                  >
+                    {status}
+                  </li>
                 ))}
-              </tbody>
+              </ul>
+            </div>
+          )}
+        </div>
+      </td>
+    </tr>
+  ))}
+
+  {/* Empty rows */}
+  {Array.from({ length: 20 }).map((_, index) => (
+    <tr key={index + names.length} className="border-t">
+      <td className="py-3 px-6 text-left text-xs"></td>
+      <td className="py-3 px-6 text-center text-xs"></td>
+      <td className="py-3 px-6 text-center text-xs"></td>
+      <td className="py-3 px-6 text-center text-xs"></td>
+      <td className="py-3 px-6 text-center text-xs"></td>
+    </tr>
+  ))}
+
+  {alljobs.map((job, index) => (
+    <tr key={index} className="border-t">
+      <td className="py-3 px-6 text-left text-xs">{job.name}</td>
+      <td className="py-3 px-6 text-center text-xs">{job.job_title}</td>
+      <td className="py-3 px-6 text-center text-xs">{job.date}</td>
+      <td className="py-3 px-6 text-center text-xs">{job.salary}</td>
+      <td className="py-3 px-6 text-center text-xs">{job.salary_status}</td>
+    </tr>
+  ))}
+</tbody>
+
             </table>
           </div>
         </div>
