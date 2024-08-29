@@ -200,7 +200,6 @@ function Employeetask() {
               <thead>
                 <tr>
                   <th className="py-3 px-16 bg-gray-200 text-[#3d3d3d] text-left">Company Name</th>
-                  <th className="py-3 px-16 bg-gray-200 text-[#3d3d3d] text-left">Location</th>
                   <th className="py-3 px-16 bg-gray-200 text-[#3d3d3d] text-center">Vehicle</th>
                   <th className="py-3 px-4 bg-gray-200 text-[#3d3d3d] text-center">Description</th>
                   <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-center">Date</th>
@@ -219,14 +218,7 @@ function Employeetask() {
         onChange={(e) => { setNames(e.target.value) }}
       />
     </td>
-    <td className="py-3 px-4 text-left text-xs">
-      <input
-        type="text"
-        className="w-full py-1 px-2 border rounded"
-        placeholder="Enter Location"
-        onChange={(e) => { setNames(e.target.value) }}
-      />
-    </td>
+  
     <td className="py-3 px-4 text-center text-xs">
       <div className="relative inline-block">
         <button
@@ -376,18 +368,7 @@ function Employeetask() {
       <td className="py-3 px-6 text-center text-xs">{invoice.project_status}</td>
     </tr>
   ))}
-  {/* Additional 10 empty rows */}
-  {[...Array(10)].map((_, index) => (
-    <tr key={`empty-${index}`} className="border-t">
-      <td className="py-3 px-6 text-left text-xs">&nbsp;</td>
-      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
-      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
-      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
-      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
-      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
-      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
-    </tr>
-  ))}
+
 </tbody>
 
             </table>
