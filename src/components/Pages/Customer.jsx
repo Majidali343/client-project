@@ -52,8 +52,8 @@ function Employeetask() {
   };
 
 
-  const downloadExcel = () => {
-    axios.get('http://localhost:5000/customer/getexcelcustomer', { responseType: 'blob' })
+  const downloadExcel = (id) => {
+    axios.get(`http://localhost:5000/customer/getexcelcustomer/${id}`, { responseType: 'blob' })
       .then((response) => {
         const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         saveAs(blob, 'data.xlsx');
@@ -349,7 +349,7 @@ function Employeetask() {
       <td className="py-3 px-6 text-center text-xs">{customer.contact}</td>
       <td className="py-3 px-6 text-center text-xs">{customer.deals}</td>
       <td className="py-3 px-6 text-center text-xs">{customer.customer}</td>
-      <td className="py-3 px-6 text-center text-xs"> <button className='bg-green-900 p-1 rounded-md text-white font-medium' onClick={downloadExcel}>
+      <td className="py-3 px-6 text-center text-xs"> <button className='bg-[#ea8732] p-1 rounded-md text-white font-medium'   onClick={() => downloadExcel(customer.id)}>
       Download Excel
     </button></td>
     </tr>
