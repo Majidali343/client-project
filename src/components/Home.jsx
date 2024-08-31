@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Logo from "../components/Pages/images/logo.jpeg";
 import Notification from "../components/Pages/images/Notification.png"
+import DashboardDonutChart from './DashboardDonutChart';
 
 function Home() {
   return (
@@ -144,7 +145,14 @@ function Home() {
                   <button className="text-base font-semibold">Invoice</button>{" "}
                 </Link>
               </div>
+
+              
             </div>
+
+
+            <DashboardDonutChart />
+
+
           </main>
         </div>
       </div>
