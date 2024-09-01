@@ -244,7 +244,7 @@ function Employeetask() {
               onChange={(e) => setSearchCompany(e.target.value)}
               placeholder="Search company"
             />
-            <button onClick={resetFilters} className="bg-gray-500 text-white px-6 py-1 rounded-md">
+            <button onClick={resetFilters} className="bg-[#ea8732] text-white px-6 py-1 rounded-md">
               Reset
             </button>
           </div>
