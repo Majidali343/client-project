@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 import { saveAs } from 'file-saver';
 import Navigation from './Navigation';
+import BarChart from '../BarChart';
 
 function Employeetask() {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -141,9 +142,11 @@ function Employeetask() {
     setFilteredData(data);
   };
 
+  const chartLabels = filteredData.map(item => item.date);
+  const chartData = filteredData.map(item => item.amount);
 
   return (
-    <div className="bg-gray-100 h-screen flex">
+    <div className="bg-gray-100  flex">
       <aside className="w-64 bg-white text-white flex-shrink-0 fixed h-full">
         <div className="p-6">
           <img
@@ -197,7 +200,7 @@ function Employeetask() {
           </div>
         </div>
         <div className="flex-1 p-6 flex justify-center overflow-y-auto">
-          <div className="overflow-x-auto w-full max-w-4xl">
+          <div className="overflow-x-auto w-full max-w-4xl h-96">
             <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
               <thead>
                 <tr>
@@ -379,6 +382,9 @@ function Employeetask() {
 
             </table>
           </div>
+        </div>
+        <div className="bg-white shadow flex items-center justify-center ">
+        <  BarChart chartData={chartData} chartLabels={chartLabels} />
         </div>
       </div>
     </div>

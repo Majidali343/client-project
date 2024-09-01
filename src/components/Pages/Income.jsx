@@ -8,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 import { saveAs } from 'file-saver';
 import Navigation from './Navigation';
+import BarChart from '../BarChart';
 
 function Employeetask() {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -83,7 +84,7 @@ function Employeetask() {
         body: JSON.stringify(formData),
       });
 
-      
+
 
       fetchData();
 
@@ -108,7 +109,7 @@ function Employeetask() {
     fetchData();
   }, []);
 
-  
+
   useEffect(() => {
     filterData();
   }, [dateFilter, searchName]);
@@ -139,8 +140,11 @@ function Employeetask() {
     setFilteredData(data);
   };
 
+  const chartLabels = filteredData.map(item => item.date);
+  const chartData = filteredData.map(item => item.salary);
+
   return (
-    <div className="bg-gray-100 h-screen flex">
+    <div className="bg-gray-100  flex">
       <aside className="w-64 bg-white text-white flex-shrink-0 fixed h-full">
         <div className="p-6">
           <img
@@ -148,26 +152,20 @@ function Employeetask() {
             src={Logo}
             alt="Logo"
           />
-         <Navigation/>
+          <Navigation/>
         </div>
       </aside>
       <div className="flex-1 flex flex-col ml-64">
         <header className="bg-white shadow p-7 flex items-center">
           <h2 className="text-xl font-bold text-[#3d3d3d] flex-1">Income</h2>
           <div className="flex-1 flex justify-center ml-60">
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs"
-            />
+          
           </div>
           <div className="w-8 h-8 cursor-pointer hover:red-300">
             <img src={Notification} alt="icon" />
           </div>
           <button className="text-[#FFFF] bg-[#ea8732] ml-9 mr-9 border-0 py-1 px-2 w-28 focus:outline-none hover:bg-gray-200 rounded font-semibold text-sm"
-          onClick={handleSubmit} >
+            onClick={handleSubmit} >
             Submit
           </button>
         </header>
@@ -200,8 +198,9 @@ function Employeetask() {
             </button>
           </div>
         </div>
-        <div className="flex-1 p-6 flex justify-center overflow-y-auto">
-          <div className="overflow-x-auto w-full max-w-4xl">
+
+        <div className="flex-1 p-6 flex justify-center overflow-y-auto ">
+          <div className="overflow-x-auto w-full max-w-4xl h-96">
             <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
               <thead>
                 <tr>
@@ -214,123 +213,126 @@ function Employeetask() {
                 </tr>
               </thead>
               <tbody>
-  {names.map((name, index) => (
-    <tr key={index} className="text-[#3d3d3d] border-t">
-      <td className="py-3 px-4 text-center text-xs">
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => {
-            const newNames = [...names];
-            newNames[index] = e.target.value;
-            setNames(newNames);
-          }}
-          className="w-full py-1 px-2 border rounded"
-          placeholder="Enter Name"
-        />
-      </td>
-      <td className="py-3 px-4 text-center text-xs">
-        <input
-          type="text"
-          value={descriptions[index]}
-          onChange={(e) => handleDescriptionChange(e.target.value, index)}
-          className="w-full py-1 px-2 border rounded"
-          placeholder="Enter Description"
-        />
-      </td>
-      <td className="py-3 px-10 text-center text-xs">
-        <DatePicker
-          selected={dates[index]}
-          onChange={(date) => handleDateChange(date, index)}
-          className="w-full py-1 px-2 border rounded"
-        />
-      </td>
-      <td className="py-3 px-4 text-center text-xs">
-        <input
-          type="number"
-          value={salaries[index] || ""}
-          onChange={(e) => {
-            const newSalaries = [...salaries];
-            newSalaries[index] = e.target.value;
-            setSalaries(newSalaries);
-          }}
-          className="w-full py-1 px-2 border rounded"
-          placeholder="0"
-        />
-      </td>
+                {names.map((name, index) => (
+                  <tr key={index} className="text-[#3d3d3d] border-t">
+                    <td className="py-3 px-4 text-center text-xs">
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => {
+                          const newNames = [...names];
+                          newNames[index] = e.target.value;
+                          setNames(newNames);
+                        }}
+                        className="w-full py-1 px-2 border rounded"
+                        placeholder="Enter Name"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-center text-xs">
+                      <input
+                        type="text"
+                        value={descriptions[index]}
+                        onChange={(e) => handleDescriptionChange(e.target.value, index)}
+                        className="w-full py-1 px-2 border rounded"
+                        placeholder="Enter Description"
+                      />
+                    </td>
+                    <td className="py-3 px-10 text-center text-xs">
+                      <DatePicker
+                        selected={dates[index]}
+                        onChange={(date) => handleDateChange(date, index)}
+                        className="w-full py-1 px-2 border rounded"
+                      />
+                    </td>
+                    <td className="py-3 px-4 text-center text-xs">
+                      <input
+                        type="number"
+                        value={salaries[index] || ""}
+                        onChange={(e) => {
+                          const newSalaries = [...salaries];
+                          newSalaries[index] = e.target.value;
+                          setSalaries(newSalaries);
+                        }}
+                        className="w-full py-1 px-2 border rounded"
+                        placeholder="0"
+                      />
+                    </td>
 
-      <td className="py-3 px-4 text-center text-xs">
-        <div className="relative inline-block">
-          <button
-            className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
-            type="button"
-            onClick={() => toggleDropdown(index)}
-          >
-            {salaryStatuses[index] || "Choose Status"}
-            <svg
-              className="w-2.5 h-2.5 ml-3"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 10 6"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="1.5"
-                d="m1 1 4 4 4-4"
-              />
-            </svg>
-          </button>
-          {dropdownOpen === index && (
-            <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg">
-              <ul className="list-none m-0 p-0">
-                {["Pending", "Paid"].map((status, i) => (
-                  <li
-                    key={i}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleDropdownChange(status, index, "salaryStatus")}
-                  >
-                    {status}
-                  </li>
+                    <td className="py-3 px-4 text-center text-xs">
+                      <div className="relative inline-block">
+                        <button
+                          className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
+                          type="button"
+                          onClick={() => toggleDropdown(index)}
+                        >
+                          {salaryStatuses[index] || "Choose Status"}
+                          <svg
+                            className="w-2.5 h-2.5 ml-3"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 10 6"
+                          >
+                            <path
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="1.5"
+                              d="m1 1 4 4 4-4"
+                            />
+                          </svg>
+                        </button>
+                        {dropdownOpen === index && (
+                          <div className="absolute mt-2 bg-white border border-gray-300 rounded shadow-lg">
+                            <ul className="list-none m-0 p-0">
+                              {["Pending", "Paid"].map((status, i) => (
+                                <li
+                                  key={i}
+                                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                  onClick={() => handleDropdownChange(status, index, "salaryStatus")}
+                                >
+                                  {status}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
                 ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      </td>
-    </tr>
-  ))}
 
-  {/* Render rows based on taskData */}
-  {filteredData.map((task, index) => (
-    <tr key={index} className="border-t">
-      <td className="py-3 px-6 text-left text-xs">{task.name}</td>
-      <td className="py-3 px-6 text-center text-xs">{task.description}</td>
-      <td className="py-3 px-6 text-center text-xs">{task.date}</td>
-      <td className="py-3 px-6 text-center text-xs">{task.salary}</td>
-      <td className="py-3 px-6 text-center text-xs">{task.salary_status}</td>
-      {/* <td className="py-3 px-6 text-center text-xs"> <button className='bg-[#ea8732] p-1 rounded-md text-white font-medium'   onClick={() => downloadExcel(task.id)}>
+                {/* Render rows based on taskData */}
+                {filteredData.map((task, index) => (
+                  <tr key={index} className="border-t">
+                    <td className="py-3 px-6 text-left text-xs">{task.name}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.description}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.date}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.salary}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.salary_status}</td>
+                    {/* <td className="py-3 px-6 text-center text-xs"> <button className='bg-[#ea8732] p-1 rounded-md text-white font-medium'   onClick={() => downloadExcel(task.id)}>
       Download Excel
     </button></td> */}
-    </tr>
-  ))}
+                  </tr>
+                ))}
 
-  {/* Add 10 empty rows */}
-  {[...Array(20)].map((_, index) => (
-    <tr key={index} className="border-t">
-      <td className="py-3 px-6 text-left text-xs"></td>
-      <td className="py-3 px-6 text-center text-xs"></td>
-      <td className="py-3 px-6 text-center text-xs"></td>
-      <td className="py-3 px-6 text-center text-xs"></td>
-      <td className="py-3 px-6 text-center text-xs"></td>
-    </tr>
-  ))}
-</tbody>
+                {/* Add 10 empty rows */}
+                {[...Array(20)].map((_, index) => (
+                  <tr key={index} className="border-t">
+                    <td className="py-3 px-6 text-left text-xs"></td>
+                    <td className="py-3 px-6 text-center text-xs"></td>
+                    <td className="py-3 px-6 text-center text-xs"></td>
+                    <td className="py-3 px-6 text-center text-xs"></td>
+                    <td className="py-3 px-6 text-center text-xs"></td>
+                  </tr>
+                ))}
+              </tbody>
 
             </table>
           </div>
+        </div>
+        <div className="bg-white shadow flex items-center justify-center ">
+        <  BarChart chartData={chartData} chartLabels={chartLabels} />
         </div>
       </div>
     </div>
