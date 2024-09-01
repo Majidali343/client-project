@@ -16,10 +16,18 @@ function Employeetask() {
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [taskdata, settaskdata] = useState(['']);
   const [time, setTime] = useState('');
+  const [company, setCompany] = useState('');
+
+  const [filteredData, setFilteredData] = useState([]);
+  const [timeFilter, setTimeFilter] = useState({ start: '', end: '' });
+  const [searchName, setSearchName] = useState('');
+  const [searchCompany, setSearchCompany] = useState('');
+
 
   const [formData, setFormData] = useState({
     name: "",
     location: "",
+    company: "",
     task: "",
     work_hours: workHours[0],
     date: dates[0],
@@ -47,7 +55,7 @@ function Employeetask() {
     setTime(event.target.value);
     setFormData({ ...formData, time: time });
   };
-
+ 
 
   const handleWorkHoursChange = (hours, index) => {
     const newWorkHours = [...workHours];
@@ -81,6 +89,10 @@ function Employeetask() {
     setDates(newDates);
     setFormData({ ...formData, date: date }); // Update formData
   };
+  const handlecompanyChange = (event) => {
+    setCompany(event.target.value);
+    setFormData({ ...formData, company: company });
+  };
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -88,7 +100,7 @@ function Employeetask() {
 
   const handleSubmit = async () => {
     try {
-    const reslt=  await fetch("http://localhost:5000/employeetask/post/Etask", {
+      const reslt = await fetch("http://localhost:5000/employeetask/post/Etask", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -97,7 +109,7 @@ function Employeetask() {
       });
 
       fetchData();
-     
+
       // Optionally handle response or update state after successful POST
     } catch (error) {
       console.error("Error posting data:", error);
@@ -109,7 +121,7 @@ function Employeetask() {
       const response = await fetch("http://localhost:5000/employeetask/get/Etask");
       const data = await response.json();
       settaskdata(data.rows)
-      
+      setFilteredData(data.rows);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -120,6 +132,45 @@ function Employeetask() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    filterData();
+  }, [timeFilter, searchName ,searchCompany]);
+
+
+  const resetFilters = () => {
+    setTimeFilter({ start: '', end: '' });
+    setSearchName('');
+    setSearchCompany('');
+    setFilteredData(taskdata); // Reset to original data
+  };
+
+  const filterData = () => {
+    let data = taskdata;
+
+    if (timeFilter.start && timeFilter.end) {
+      data = data.filter(invoice => {
+        const invoiceTime = new Date(`1970-01-01T${invoice.time}Z`).getTime();
+        const startTime = new Date(`1970-01-01T${timeFilter.start}Z`).getTime();
+        const endTime = new Date(`1970-01-01T${timeFilter.end}Z`).getTime();
+
+        return invoiceTime >= startTime && invoiceTime <= endTime;
+      });
+    }
+
+    if (searchName) {
+      data = data.filter(invoice =>
+        invoice.name.toLowerCase().includes(searchName.toLowerCase())
+      );
+    }
+    if (searchCompany) {
+      data = data.filter(invoice =>
+        invoice.company.toLowerCase().includes(searchCompany.toLowerCase())
+      );
+    }
+
+    setFilteredData(data);
+  };
+
   return (
     <div className="bg-gray-100 h-screen flex">
       <aside className="w-64 bg-white text-white flex-shrink-0 fixed h-full">
@@ -129,7 +180,7 @@ function Employeetask() {
             src={Logo}
             alt="Logo"
           />
-         <Navigation/>
+          <Navigation />
         </div>
       </aside>
       <div className="flex-1 flex flex-col ml-64">
@@ -138,13 +189,7 @@ function Employeetask() {
             <h2 className="text-xl font-bold text-[#3d3d3d]">Employee Task</h2>
             <div className="flex items-center space-x-4">
               <div className="flex-1 flex justify-center ml-60">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs"
-                />
+               
               </div>
               <div className="w-8 h-8 cursor-pointer hover:bg-gray-200 rounded-full">
                 <img src={Notification} alt="Notification Icon" />
@@ -158,12 +203,50 @@ function Employeetask() {
             </div>
           </div>
         </header>
+        <div className="bg-white shadow p-10 flex items-center ">
+          <div className="filters">
+            <input
+              type="time"
+              value={timeFilter.start}
+              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs mx-4"
+              onChange={(e) => setTimeFilter({ ...timeFilter, start: e.target.value })}
+              placeholder="Start Time"
+            />
+            <input
+              type="time"
+              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs mx-4"
+              value={timeFilter.end}
+              onChange={(e) => setTimeFilter({ ...timeFilter, end: e.target.value })}
+              placeholder="End Time"
+            />
+            
+            <input
+              type="text"
+              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs mx-4"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              placeholder="Search Employee"
+            />
+            <input
+              type="text"
+              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs mx-4"
+              value={searchCompany}
+              onChange={(e) => setSearchCompany(e.target.value)}
+              placeholder="Search company"
+            />
+            <button onClick={resetFilters} className="bg-gray-500 text-white px-6 py-1 rounded-md">
+              Reset
+            </button>
+          </div>
+        </div>
+
         <div className="flex-1 p-6 flex justify-center overflow-y-auto">
           <div className="overflow-x-auto w-full max-w-4xl">
             <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
               <thead>
                 <tr>
-                  <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-left">Employee Name</th>
+                  <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-left">Employee</th>
+                  <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-left">Company</th>
                   <th className="py-3 px-10 bg-gray-200 text-[#3d3d3d] text-center">Location</th>
                   <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-center">Task</th>
                   <th className="py-3 px-8 bg-gray-200 text-[#3d3d3d] text-center">Work Hours</th>
@@ -173,161 +256,172 @@ function Employeetask() {
                   {/* <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-center">Download Data</th> */}
                 </tr>
               </thead>
-             <tbody>
-  <tr className="text-[#3d3d3d] border-t">
-    <td className="py-3 px-6 text-left text-xs">
-      <input
-        type="text"
-        name="name"
-        value={formData.name}
-        onChange={handleInputChange}
-        className="w-full py-1 px-2 border rounded"
-        placeholder="Enter Employee"
-      />
-    </td>
-    <td className="py-3 px-6 text-center text-xs">
-      <input
-        type="text"
-        name="location"
-        value={formData.location}
-        onChange={handleInputChange}
-        className="w-full py-1 px-2 border rounded"
-        placeholder="Enter Location"
-      />
-    </td>
-    <td className="py-3 px-6 text-center text-xs">
-      <input
-        type="text"
-        name="task"
-        value={formData.task}
-        onChange={handleInputChange}
-        className="w-full py-1 px-2 border rounded"
-        placeholder="Enter Task"
-      />
-    </td>
-    <td className="py-3 px-6 text-center text-xs">
-      <div className="relative inline-block">
-        <button
-          className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
-          type="button"
-          onClick={() => toggleDropdown(0)}
-        >
-          {workHours[0] || "Choose"}
-          <svg
-            className="w-2.5 h-2.5 ml-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 10 6"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="1.5"
-              d="m1 1 4 4 4-4"
-            />
-          </svg>
-        </button>
-        {dropdownOpen === 0 && (
-          <div className="absolute mt-2 w-24 py-1 bg-white border border-gray-300 rounded shadow-lg">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((hours) => (
-              <button
-                key={hours}
-                onClick={() => handleWorkHoursChange(hours, 0)}
-                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-200"
-              >
-                {hours} Hour{hours > 1 ? 's' : ''}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </td>
-    <td className="py-3 px-6 text-center text-xs">
-      <DatePicker
-        selected={dates[0]}
-        onChange={(date) => handleDateChange(date, 0)}
-        className="text-center bg-white border rounded w-full py-1 px-3"
-        dateFormat="dd/MM/yyyy"
-      />
-    </td>
-    <td className="py-3 px-4 text-center text-xs">
-    <input
-          type="time"
-          value={time}
-          onChange={handleTimeChange}
-        />
-    </td>
-    <td className="py-3 px-6 text-center text-xs">
-      <div className="relative inline-block">
-        <button
-          className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
-          type="button"
-          onClick={() => toggleDropdown(1)}
-        >
-          {taskStatus[0] || "Choose"}
-          <svg
-            className="w-2.5 h-2.5 ml-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 10 6"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="1.5"
-              d="m1 1 4 4 4-4"
-            />
-          </svg>
-        </button>
-        {dropdownOpen === 1 && (
-          <div className="absolute mt-2 w-full py-1 bg-white border border-gray-300 rounded shadow-lg">
-            {["Pending", "Completed"].map((status) => (
-              <button
-                key={status}
-                onClick={() => handleTaskStatusChange(status, 0)}
-                className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-200"
-              >
-                {status}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-    </td>
-  </tr>
+              <tbody>
+                <tr className="text-[#3d3d3d] border-t">
+                  <td className="py-3 px-6 text-left text-xs">
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="w-full py-1 px-2 border rounded"
+                      placeholder="Enter Employee"
+                    />
+                  </td>
+                  <td className="py-3 px-4 text-center text-xs">
+                    <input
+                      type="text"
+                      placeholder="company"
+                      className="w-full py-1 px-2 border rounded"
+                      value={company}
+                      onChange={handlecompanyChange}
+                    />
+                  </td>
+                  <td className="py-3 px-6 text-center text-xs">
+                    <input
+                      type="text"
+                      name="location"
+                      value={formData.location}
+                      onChange={handleInputChange}
+                      className="w-full py-1 px-2 border rounded"
+                      placeholder="Enter Location"
+                    />
+                  </td>
+                  <td className="py-3 px-6 text-center text-xs">
+                    <input
+                      type="text"
+                      name="task"
+                      value={formData.task}
+                      onChange={handleInputChange}
+                      className="w-full py-1 px-2 border rounded"
+                      placeholder="Enter Task"
+                    />
+                  </td>
+                  <td className="py-3 px-6 text-center text-xs">
+                    <div className="relative inline-block">
+                      <button
+                        className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
+                        type="button"
+                        onClick={() => toggleDropdown(0)}
+                      >
+                        {workHours[0] || "Choose"}
+                        <svg
+                          className="w-2.5 h-2.5 ml-3"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 10 6"
+                        >
+                          <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            d="m1 1 4 4 4-4"
+                          />
+                        </svg>
+                      </button>
+                      {dropdownOpen === 0 && (
+                        <div className="absolute mt-2 w-24 py-1 bg-white border border-gray-300 rounded shadow-lg">
+                          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((hours) => (
+                            <button
+                              key={hours}
+                              onClick={() => handleWorkHoursChange(hours, 0)}
+                              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-200"
+                            >
+                              {hours} Hour{hours > 1 ? 's' : ''}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td className="py-3 px-6 text-center text-xs">
+                    <DatePicker
+                      selected={dates[0]}
+                      onChange={(date) => handleDateChange(date, 0)}
+                      className="text-center bg-white border rounded w-full py-1 px-3"
+                      dateFormat="dd/MM/yyyy"
+                    />
+                  </td>
+                  <td className="py-3 px-4 text-center text-xs">
+                    <input
+                      type="time"
+                      className="w-full py-1 px-2 border rounded"
+                      value={time}
+                      onChange={handleTimeChange}
+                    />
+                  </td>
+                  <td className="py-3 px-6 text-center text-xs">
+                    <div className="relative inline-block">
+                      <button
+                        className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
+                        type="button"
+                        onClick={() => toggleDropdown(1)}
+                      >
+                        {taskStatus[0] || "Choose"}
+                        <svg
+                          className="w-2.5 h-2.5 ml-3"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 10 6"
+                        >
+                          <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            d="m1 1 4 4 4-4"
+                          />
+                        </svg>
+                      </button>
+                      {dropdownOpen === 1 && (
+                        <div className="absolute mt-2 w-full py-1 bg-white border border-gray-300 rounded shadow-lg">
+                          {["Pending", "Completed"].map((status) => (
+                            <button
+                              key={status}
+                              onClick={() => handleTaskStatusChange(status, 0)}
+                              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-200"
+                            >
+                              {status}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
 
-  {/* Existing task data rows */}
-  {taskdata.map((task, index) => (
-    <tr key={index} className="border-t">
-      <td className="py-3 px-6 text-center text-xs">{task.name}</td>
-      <td className="py-3 px-6 text-center text-xs">{task.location}</td>
-      <td className="py-3 px-6 text-center text-xs">{task.task}</td>
-      <td className="py-3 px-6 text-center text-xs">{task.work_hours}</td>
-      <td className="py-3 px-6 text-center text-xs">{task.date}</td>
-      <td className="py-3 px-6 text-center text-xs">{formatTime(task.time)}</td>
-      <td className="py-3 px-6 text-center text-xs">{task.task_status}</td>
-      {/* <td className="py-3 px-6 text-center text-xs"> <button className='bg-[#ea8732] p-1 rounded-md text-white font-medium'   onClick={() => downloadExcel(task.id)}>
+                {/* Existing task data rows */}
+                {filteredData.map((task, index) => (
+                  <tr key={index} className="border-t">
+                    <td className="py-3 px-6 text-center text-xs">{task.name}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.company}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.location}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.task}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.work_hours}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.date}</td>
+                    <td className="py-3 px-6 text-center text-xs">{formatTime(task.time)}</td>
+                    <td className="py-3 px-6 text-center text-xs">{task.task_status}</td>
+                    {/* <td className="py-3 px-6 text-center text-xs"> <button className='bg-[#ea8732] p-1 rounded-md text-white font-medium'   onClick={() => downloadExcel(task.id)}>
       Download Excel
     </button></td> */}
-    </tr>
-  ))}
+                  </tr>
+                ))}
 
-  {/* Adding 10 empty rows */}
-  {Array.from({ length: 20 }).map((_, index) => (
-    <tr key={index + taskdata.length} className="border-t">
-      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
-      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
-      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
-      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
-      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
-      <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
-    </tr>
-  ))}
-</tbody>
+                {/* Adding 10 empty rows */}
+                {Array.from({ length: 20 }).map((_, index) => (
+                  <tr key={index + taskdata.length} className="border-t">
+                    <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+                    <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+                    <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+                    <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+                    <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+                    <td className="py-3 px-6 text-center text-xs">&nbsp;</td>
+                  </tr>
+                ))}
+              </tbody>
 
             </table>
           </div>
