@@ -116,14 +116,14 @@ function Employeetask() {
     fetchData();
   }, []);
 
-  
+
   useEffect(() => {
     filterData();
-  }, [ dateFilter, searchName]);
+  }, [dateFilter, searchName]);
 
 
   const resetFilters = () => {
-   
+
     setDateFilter({ start: '', end: '' });
     setSearchName('');
     setFilteredData(taskData); // Reset to original data
@@ -153,7 +153,7 @@ function Employeetask() {
       <aside className="w-64 bg-white text-white flex-shrink-0 fixed h-full">
         <div className="p-6">
           <img className="w-24 h-24 text-white p-2" src={Logo} alt="Logo" />
-         <Navigation/>
+          <Navigation />
         </div>
       </aside>
       <div className="flex-1 flex flex-col ml-64">
@@ -171,13 +171,13 @@ function Employeetask() {
           <div className="w-8 h-8 cursor-pointer hover:red-300">
             <img src={Notification} alt="icon" />
           </div>
-          <button className="text-[#FFFF] bg-[#ea8732] ml-9 mr-9 border-0 py-1 px-2 w-28 focus:outline-none hover:bg-gray-200 rounded font-semibold text-sm"  onClick={handleSubmit}>
-          Submit
+          <button className="text-[#FFFF] bg-[#ea8732] ml-9 mr-9 border-0 py-1 px-2 w-28 focus:outline-none hover:bg-gray-200 rounded font-semibold text-sm" onClick={handleSubmit}>
+            Submit
           </button>
         </header>
         <div className="bg-white shadow p-10 flex items-center ">
           <div className="filters">
-           
+
             <input
               type="date"
               className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs mx-4"
@@ -220,164 +220,164 @@ function Employeetask() {
                 </tr>
               </thead>
               <tbody>
-  <tr className="text-[#3d3d3d] border-t">
-    <td className="py-3 px-4 text-left text-xs">
-      <input
-        type="text"
-        className="w-full py-1 px-2 border rounded"
-        placeholder="Enter Name"
-        onChange={(e) => {
-          setNames(e.target.value);
-        }}
-      />
-    </td>
-    <td className="py-3 px-4 text-center text-xs">
-      <div className="relative inline-block">
-        <button
-          className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
-          type="button"
-          onClick={() => toggleDropdown(0)}
-        >
-          {vehicles[0] || "Select Vehicle"}
-        </button>
-        {dropdownOpen === 0 && (
-          <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10">
-            <ul className="py-1">
-              {[
-                "Crane: 25-Ton",
-                "Crane: 50-Ton",
-                "Crane: 70-Ton",
-                "Crane: 100-Ton",
-                "Forklift: 3-Ton",
-                "Forklift: 5-Ton",
-                "Forklift: 7-Ton",
-                "Forklift: 10-Ton",
-                "Boomloader: 523",
-                "Boomloader: 540",
-              ].map((vehicle, index) => (
-                <li
-                  key={index}
-                  className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleDropdownChange(vehicle, 0, "vehicle")}
-                >
-                  {vehicle}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    </td>
-    <td className="py-3 px-4 text-left text-xs">
-      <input
-        type="text"
-        className="w-full py-1 px-2 border rounded"
-        placeholder="Enter Description"
-        onChange={(e) => {
-          setDescriptions(e.target.value);
-        }}
-      />
-    </td>
-    <td className="py-3 px-10 text-center text-xs">
-      <DatePicker
-        selected={dates[0]}
-        onChange={(date) => handleDateChange(date, 0)}
-        dateFormat="MM/dd/yyyy"
-        className="w-full py-1 px-2 border rounded"
-      />
-    </td>
-    <td className="py-3 px-4 text-left text-xs">
-      <input
-        type="text"
-        className="w-full py-1 px-2 border rounded"
-        placeholder="Enter Contact"
-        value={contacts[0] || ""}
-        onChange={(e) => handleDropdownChange(e.target.value, 0, "contact")}
-      />
-    </td>
-    <td className="py-3 px-4 text-center text-xs">
-      <div className="relative inline-block">
-        <button
-          className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
-          type="button"
-          onClick={() => toggleDropdown(1)}
-        >
-          {deals[0] || "Select Deal"}
-        </button>
-        {dropdownOpen === 1 && (
-          <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10">
-            <ul className="py-1">
-              {["Cash", "Online"].map((deal, index) => (
-                <li
-                  key={index}
-                  className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleDropdownChange(deal, 0, "deal")}
-                >
-                  {deal}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    </td>
-    <td className="py-3 px-4 text-center text-xs">
-      <div className="relative inline-block">
-        <button
-          className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
-          type="button"
-          onClick={() => toggleDropdown(2)}
-        >
-          {customers[0] || "Select Customer"}
-        </button>
-        {dropdownOpen === 2 && (
-          <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10">
-            <ul className="py-1">
-              {["Old", "New"].map((customer, index) => (
-                <li
-                  key={index}
-                  className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                  onClick={() => handleDropdownChange(customer, 0, "customer")}
-                >
-                  {customer}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    </td>
-  </tr>
+                <tr className="text-[#3d3d3d] border-t">
+                  <td className="py-3 px-4 text-left text-xs">
+                    <input
+                      type="text"
+                      className="w-full py-1 px-2 border rounded"
+                      placeholder="Enter Name"
+                      onChange={(e) => {
+                        setNames(e.target.value);
+                      }}
+                    />
+                  </td>
+                  <td className="py-3 px-4 text-center text-xs">
+                    <div className="relative inline-block">
+                      <button
+                        className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
+                        type="button"
+                        onClick={() => toggleDropdown(0)}
+                      >
+                        {vehicles[0] || "Select Vehicle"}
+                      </button>
+                      {dropdownOpen === 0 && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                          <ul className="py-1">
+                            {[
+                              "Crane: 25-Ton",
+                              "Crane: 50-Ton",
+                              "Crane: 70-Ton",
+                              "Crane: 100-Ton",
+                              "Forklift: 3-Ton",
+                              "Forklift: 5-Ton",
+                              "Forklift: 7-Ton",
+                              "Forklift: 10-Ton",
+                              "Boomloader: 523",
+                              "Boomloader: 540",
+                            ].map((vehicle, index) => (
+                              <li
+                                key={index}
+                                className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                onClick={() => handleDropdownChange(vehicle, 0, "vehicle")}
+                              >
+                                {vehicle}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-left text-xs">
+                    <input
+                      type="text"
+                      className="w-full py-1 px-2 border rounded"
+                      placeholder="Enter Description"
+                      onChange={(e) => {
+                        setDescriptions(e.target.value);
+                      }}
+                    />
+                  </td>
+                  <td className="py-3 px-10 text-center text-xs">
+                    <DatePicker
+                      selected={dates[0]}
+                      onChange={(date) => handleDateChange(date, 0)}
+                      dateFormat="MM/dd/yyyy"
+                      className="w-full py-1 px-2 border rounded"
+                    />
+                  </td>
+                  <td className="py-3 px-4 text-left text-xs">
+                    <input
+                      type="text"
+                      className="w-full py-1 px-2 border rounded"
+                      placeholder="Enter Contact"
+                      value={contacts[0] || ""}
+                      onChange={(e) => handleDropdownChange(e.target.value, 0, "contact")}
+                    />
+                  </td>
+                  <td className="py-3 px-4 text-center text-xs">
+                    <div className="relative inline-block">
+                      <button
+                        className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
+                        type="button"
+                        onClick={() => toggleDropdown(1)}
+                      >
+                        {deals[0] || "Select Deal"}
+                      </button>
+                      {dropdownOpen === 1 && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                          <ul className="py-1">
+                            {["Cash", "Online"].map((deal, index) => (
+                              <li
+                                key={index}
+                                className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                onClick={() => handleDropdownChange(deal, 0, "deal")}
+                              >
+                                {deal}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-center text-xs">
+                    <div className="relative inline-block">
+                      <button
+                        className="text-[#ea8732] bg-[#fef4eb] hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-[#ffd7b5] font-medium rounded-full text-xs px-4 py-1.5 inline-flex items-center"
+                        type="button"
+                        onClick={() => toggleDropdown(2)}
+                      >
+                        {customers[0] || "Select Customer"}
+                      </button>
+                      {dropdownOpen === 2 && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                          <ul className="py-1">
+                            {["Old", "New"].map((customer, index) => (
+                              <li
+                                key={index}
+                                className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                onClick={() => handleDropdownChange(customer, 0, "customer")}
+                              >
+                                {customer}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
 
-  {/* Render rows based on taskData */}
-  {filteredData.map((customer, index) => (
-    <tr key={index} className="border-t">
-      <td className="py-3 px-6 text-left text-xs">{customer.name}</td>
-      <td className="py-3 px-6 text-center text-xs">{customer.vehicle}</td>
-      <td className="py-3 px-6 text-center text-xs">{customer.description}</td>
-      <td className="py-3 px-6 text-center text-xs">{customer.date}</td>
-      <td className="py-3 px-6 text-center text-xs">{customer.contact}</td>
-      <td className="py-3 px-6 text-center text-xs">{customer.deals}</td>
-      <td className="py-3 px-6 text-center text-xs">{customer.customer}</td>
-      {/* <td className="py-3 px-6 text-center text-xs"> <button className='bg-[#ea8732] p-1 rounded-md text-white font-medium'   onClick={() => downloadExcel(customer.id)}>
+                {/* Render rows based on taskData */}
+                {filteredData.map((customer, index) => (
+                  <tr key={index} className="border-t">
+                    <td className="py-3 px-6 text-left text-xs">{customer.name}</td>
+                    <td className="py-3 px-6 text-center text-xs">{customer.vehicle}</td>
+                    <td className="py-3 px-6 text-center text-xs">{customer.description}</td>
+                    <td className="py-3 px-6 text-center text-xs">{customer.date}</td>
+                    <td className="py-3 px-6 text-center text-xs">{customer.contact}</td>
+                    <td className="py-3 px-6 text-center text-xs">{customer.deals}</td>
+                    <td className="py-3 px-6 text-center text-xs">{customer.customer}</td>
+                    {/* <td className="py-3 px-6 text-center text-xs"> <button className='bg-[#ea8732] p-1 rounded-md text-white font-medium'   onClick={() => downloadExcel(customer.id)}>
       Download Excel
     </button></td> */}
-    </tr>
-  ))}
+                  </tr>
+                ))}
 
-  {/* Add 10 empty rows */}
-  {[...Array(20)].map((_, index) => (
-    <tr key={index} className="border-t">
-      <td className="py-3 px-6 text-left text-xs"></td>
-      <td className="py-3 px-6 text-center text-xs"></td>
-      <td className="py-3 px-6 text-center text-xs"></td>
-      <td className="py-3 px-6 text-center text-xs"></td>
-      <td className="py-3 px-6 text-center text-xs"></td>
-      <td className="py-3 px-6 text-center text-xs"></td>
-      <td className="py-3 px-6 text-center text-xs"></td>
-    </tr>
-  ))}
-</tbody>
+                {/* Add 10 empty rows */}
+                {[...Array(20)].map((_, index) => (
+                  <tr key={index} className="border-t">
+                    <td className="py-3 px-6 text-left text-xs"></td>
+                    <td className="py-3 px-6 text-center text-xs"></td>
+                    <td className="py-3 px-6 text-center text-xs"></td>
+                    <td className="py-3 px-6 text-center text-xs"></td>
+                    <td className="py-3 px-6 text-center text-xs"></td>
+                    <td className="py-3 px-6 text-center text-xs"></td>
+                    <td className="py-3 px-6 text-center text-xs"></td>
+                  </tr>
+                ))}
+              </tbody>
 
             </table>
           </div>
