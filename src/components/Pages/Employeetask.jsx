@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 import { saveAs } from 'file-saver';
 import Navigation from "./Navigation";
+import moment from 'moment';
 
 function Employeetask() {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -52,8 +53,9 @@ function Employeetask() {
 
 
   const handleTimeChange = (event) => {
-    setTime(event.target.value);
-    setFormData({ ...formData, time: time });
+    const time24h = moment(event.target.value, 'h:mm A').format('HH:mm:ss');
+    setTime(time24h);
+    setFormData({ ...formData, time: time24h });
   };
  
 
@@ -64,6 +66,11 @@ function Employeetask() {
     setFormData({ ...formData, work_hours: hours }); // Update formData
     setDropdownOpen(null); // Close dropdown after selection
   };
+
+  const format12 = (time24h) =>{
+    const formattedTime = moment(time24h, 'HH:mm:ss').format('h:mm A');
+    return formattedTime;
+  }
 
   const handleTaskStatusChange = (status, index) => {
     const newTaskStatus = [...taskStatus];
@@ -147,11 +154,14 @@ function Employeetask() {
   const filterData = () => {
     let data = taskdata;
 
+
     if (timeFilter.start && timeFilter.end) {
       data = data.filter(invoice => {
-        const invoiceTime = new Date(`1970-01-01T${invoice.time}Z`).getTime();
-        const startTime = new Date(`1970-01-01T${timeFilter.start}Z`).getTime();
-        const endTime = new Date(`1970-01-01T${timeFilter.end}Z`).getTime();
+      
+        const invoiceTime = invoice.time;
+      
+        const startTime = moment(timeFilter.start, 'h:mm A').format('HH:mm:ss');
+        const endTime = moment(timeFilter.end, 'h:mm A').format('HH:mm:ss');
 
         return invoiceTime >= startTime && invoiceTime <= endTime;
       });
@@ -402,7 +412,7 @@ function Employeetask() {
                     <td className="py-3 px-6 text-center text-xs">{task.task}</td>
                     <td className="py-3 px-6 text-center text-xs">{task.work_hours}</td>
                     <td className="py-3 px-6 text-center text-xs">{task.date}</td>
-                    <td className="py-3 px-6 text-center text-xs">{formatTime(task.time)}</td>
+                    <td className="py-3 px-6 text-center text-xs">{format12(task.time)}</td>
                     <td className="py-3 px-6 text-center text-xs">{task.task_status}</td>
                     {/* <td className="py-3 px-6 text-center text-xs"> <button className='bg-[#ea8732] p-1 rounded-md text-white font-medium'   onClick={() => downloadExcel(task.id)}>
       Download Excel
