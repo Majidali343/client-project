@@ -62,7 +62,7 @@ function Employeetask() {
     newDates[index] = date;
     setDates(newDates);
   };
- 
+
 
   const downloadExcel = (id) => {
     axios.get(`http://localhost:5000/invoice/getexcel/${id}`, { responseType: 'blob' })
@@ -155,6 +155,13 @@ function Employeetask() {
   }, [timeFilter, dateFilter, searchName]);
 
 
+  const resetFilters = () => {
+    setTimeFilter({ start: '', end: '' });
+    setDateFilter({ start: '', end: '' });
+    setSearchName('');
+    setFilteredData(taskData); // Reset to original data
+  };
+
   const filterData = () => {
     let data = taskData;
 
@@ -163,7 +170,7 @@ function Employeetask() {
         const invoiceTime = new Date(`1970-01-01T${invoice.time}Z`).getTime();
         const startTime = new Date(`1970-01-01T${timeFilter.start}Z`).getTime();
         const endTime = new Date(`1970-01-01T${timeFilter.end}Z`).getTime();
-  
+
         return invoiceTime >= startTime && invoiceTime <= endTime;
       });
     }
@@ -215,39 +222,48 @@ function Employeetask() {
             Submit
           </button>
         </header>
-        <div className="bg-white shadow p-7 flex items-center">
-        <div className="filters">
-        <input
-          type="time"
-          value={timeFilter.start}
-          onChange={(e) => setTimeFilter({ ...timeFilter, start: e.target.value })}
-          placeholder="Start Time"
-        />
-        <input
-          type="time"
-          value={timeFilter.end}
-          onChange={(e) => setTimeFilter({ ...timeFilter, end: e.target.value })}
-          placeholder="End Time"
-        />
-        <input
-          type="date"
-          value={dateFilter.start}
-          onChange={(e) => setDateFilter({ ...dateFilter, start: e.target.value })}
-          placeholder="Start Date"
-        />
-        <input
-          type="date"
-          value={dateFilter.end}
-          onChange={(e) => setDateFilter({ ...dateFilter, end: e.target.value })}
-          placeholder="End Date"
-        />
-        <input
-          type="text"
-          value={searchName}
-          onChange={(e) => setSearchName(e.target.value)}
-          placeholder="Search by Name"
-        />
-      </div>
+
+        <div className="bg-white shadow p-10 flex items-center ">
+          <div className="filters">
+            <input
+              type="time"
+              value={timeFilter.start}
+              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs mx-4"
+              onChange={(e) => setTimeFilter({ ...timeFilter, start: e.target.value })}
+              placeholder="Start Time"
+            />
+            <input
+              type="time"
+              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs mx-4"
+              value={timeFilter.end}
+              onChange={(e) => setTimeFilter({ ...timeFilter, end: e.target.value })}
+              placeholder="End Time"
+            />
+            <input
+              type="date"
+              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs mx-4"
+              value={dateFilter.start}
+              onChange={(e) => setDateFilter({ ...dateFilter, start: e.target.value })}
+              placeholder="Start Date"
+            />
+            <input
+              type="date"
+              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs mx-4"
+              value={dateFilter.end}
+              onChange={(e) => setDateFilter({ ...dateFilter, end: e.target.value })}
+              placeholder="End Date"
+            />
+            <input
+              type="text"
+              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs mx-4"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              placeholder="Search Company"
+            />
+            <button onClick={resetFilters} className="bg-gray-500 text-white px-6 py-1 rounded-md">
+              Reset
+            </button>
+          </div>
         </div>
         <div className="flex-1 p-6 flex justify-center overflow-y-auto">
           <div className="overflow-x-auto w-full max-w-4xl">
@@ -344,7 +360,7 @@ function Employeetask() {
                     <input
                       type="text"
                       placeholder="Location"
-                       className="w-full py-1 px-2 border rounded"
+                      className="w-full py-1 px-2 border rounded"
                       value={location}
                       onChange={handlelocationChange}
                     />
