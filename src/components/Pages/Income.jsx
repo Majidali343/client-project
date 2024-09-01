@@ -19,6 +19,10 @@ function Employeetask() {
   const [names, setNames] = useState([""]); // State for names
   const [taskData, setTaskData] = useState([]);
 
+  const [filteredData, setFilteredData] = useState([]);
+  const [dateFilter, setDateFilter] = useState({ start: '', end: '' });
+  const [searchName, setSearchName] = useState('');
+
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
   };
@@ -94,6 +98,7 @@ function Employeetask() {
       const response = await fetch("http://localhost:5000/income/get/E-income");
       const data = await response.json();
       setTaskData(data.rows);
+      setFilteredData(data.rows);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -103,6 +108,36 @@ function Employeetask() {
     fetchData();
   }, []);
 
+  
+  useEffect(() => {
+    filterData();
+  }, [dateFilter, searchName]);
+
+
+  const resetFilters = () => {
+
+    setDateFilter({ start: '', end: '' });
+    setSearchName('');
+    setFilteredData(taskData); // Reset to original data
+  };
+
+  const filterData = () => {
+    let data = taskData;
+
+    if (dateFilter.start && dateFilter.end) {
+      data = data.filter(invoice =>
+        invoice.date >= dateFilter.start && invoice.date <= dateFilter.end
+      );
+    }
+
+    if (searchName) {
+      data = data.filter(invoice =>
+        invoice.name.toLowerCase().includes(searchName.toLowerCase())
+      );
+    }
+
+    setFilteredData(data);
+  };
 
   return (
     <div className="bg-gray-100 h-screen flex">
@@ -136,6 +171,35 @@ function Employeetask() {
             Submit
           </button>
         </header>
+        <div className="bg-white shadow p-10 flex items-center ">
+          <div className="filters">
+
+            <input
+              type="date"
+              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs mx-4"
+              value={dateFilter.start}
+              onChange={(e) => setDateFilter({ ...dateFilter, start: e.target.value })}
+              placeholder="Start Date"
+            />
+            <input
+              type="date"
+              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs mx-4"
+              value={dateFilter.end}
+              onChange={(e) => setDateFilter({ ...dateFilter, end: e.target.value })}
+              placeholder="End Date"
+            />
+            <input
+              type="text"
+              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs mx-4"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              placeholder="Search Customer"
+            />
+            <button onClick={resetFilters} className="bg-gray-500 text-white px-6 py-1 rounded-md">
+              Reset
+            </button>
+          </div>
+        </div>
         <div className="flex-1 p-6 flex justify-center overflow-y-auto">
           <div className="overflow-x-auto w-full max-w-4xl">
             <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
@@ -240,7 +304,7 @@ function Employeetask() {
   ))}
 
   {/* Render rows based on taskData */}
-  {taskData.map((task, index) => (
+  {filteredData.map((task, index) => (
     <tr key={index} className="border-t">
       <td className="py-3 px-6 text-left text-xs">{task.name}</td>
       <td className="py-3 px-6 text-center text-xs">{task.description}</td>
