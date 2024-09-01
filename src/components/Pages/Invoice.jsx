@@ -9,6 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from 'axios';
 import { saveAs } from 'file-saver';
 import Navigation from "./Navigation";
+import moment from 'moment';
 
 function Employeetask() {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -77,7 +78,9 @@ function Employeetask() {
 
 
   const handleTimeChange = (event) => {
-    setTime(event.target.value);
+    const time24h = moment(event.target.value, 'h:mm A').format('HH:mm:ss');
+    setTime(time24h);
+
   };
 
   const handlelocationChange = (event) => {
@@ -126,14 +129,11 @@ function Employeetask() {
     }
   };
 
-  const formatTime = (time) => {
-    const date = new Date(`1970-01-01T${time}Z`); // Convert the time string to a Date object
-    return date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true
-    });
-  };
+  const format12 = (time24h) =>{
+    const formattedTime = moment(time24h, 'HH:mm:ss').format('h:mm A');
+    return formattedTime;
+  }
+ 
 
   const fetchData = async () => {
     try {
@@ -141,6 +141,7 @@ function Employeetask() {
       const data = await response.json();
       setTaskData(data.rows);
       setFilteredData(data.rows);
+    
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -167,9 +168,11 @@ function Employeetask() {
 
     if (timeFilter.start && timeFilter.end) {
       data = data.filter(invoice => {
-        const invoiceTime = new Date(`1970-01-01T${invoice.time}Z`).getTime();
-        const startTime = new Date(`1970-01-01T${timeFilter.start}Z`).getTime();
-        const endTime = new Date(`1970-01-01T${timeFilter.end}Z`).getTime();
+      
+        const invoiceTime = invoice.time;
+      
+        const startTime = moment(timeFilter.start, 'h:mm A').format('HH:mm:ss');
+        const endTime = moment(timeFilter.end, 'h:mm A').format('HH:mm:ss');
 
         return invoiceTime >= startTime && invoiceTime <= endTime;
       });
@@ -447,9 +450,9 @@ function Employeetask() {
                     <td className="py-3 px-6 text-left text-xs">{invoice.name}</td>
                     <td className="py-3 px-6 text-center text-xs">{invoice.vehicle}</td>
                     <td className="py-3 px-6 text-center text-xs">{invoice.description}</td>
-                    <td className="py-3 px-6 text-center text-xs">{invoice.location}</td>
+                    <td className="py-3 px-6 text-center text-xs">{invoice.Location}</td>
                     <td className="py-3 px-6 text-center text-xs">{invoice.date}</td>
-                    <td className="py-3 px-6 text-center text-xs"> {formatTime(invoice.time)}</td>
+                    <td className="py-3 px-6 text-center text-xs"> {format12(invoice.time)}</td>
                     <td className="py-3 px-6 text-center text-xs">{invoice.advance}</td>
                     <td className="py-3 px-6 text-center text-xs">{invoice.pending}</td>
                     <td className="py-3 px-6 text-center text-xs">{invoice.project_status}</td>
