@@ -220,7 +220,7 @@ function Employeetask() {
           </button>
         </header>
 
-        <div className="bg-white shadow p-10 flex items-center ">
+        <div className="bg-white shadow p-10 flex items-center justify-center ">
           <div className="filters">
             <input
               type="time"
