@@ -24,6 +24,12 @@ function Employeetask() {
   const [time, setTime] = useState('');
   const [location, setlocation] = useState('');
 
+
+  const [filteredData, setFilteredData] = useState([]);
+  const [timeFilter, setTimeFilter] = useState({ start: '', end: '' });
+  const [dateFilter, setDateFilter] = useState({ start: '', end: '' });
+  const [searchName, setSearchName] = useState('');
+
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
   };
@@ -134,6 +140,7 @@ function Employeetask() {
       const response = await fetch("http://localhost:5000/invoice/get/E-invoice");
       const data = await response.json();
       setTaskData(data.rows);
+      setFilteredData(data.rows);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -143,7 +150,38 @@ function Employeetask() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    filterData();
+  }, [timeFilter, dateFilter, searchName]);
 
+
+  const filterData = () => {
+    let data = taskData;
+
+    if (timeFilter.start && timeFilter.end) {
+      data = data.filter(invoice => {
+        const invoiceTime = new Date(`1970-01-01T${invoice.time}Z`).getTime();
+        const startTime = new Date(`1970-01-01T${timeFilter.start}Z`).getTime();
+        const endTime = new Date(`1970-01-01T${timeFilter.end}Z`).getTime();
+
+        return invoiceTime >= startTime && invoiceTime <= endTime;
+      });
+    }
+
+    if (dateFilter.start && dateFilter.end) {
+      data = data.filter(invoice =>
+        invoice.date >= dateFilter.start && invoice.date <= dateFilter.end
+      );
+    }
+
+    if (searchName) {
+      data = data.filter(invoice =>
+        invoice.name.toLowerCase().includes(searchName.toLowerCase())
+      );
+    }
+
+    setFilteredData(data);
+  };
 
 
   return (
@@ -178,7 +216,38 @@ function Employeetask() {
           </button>
         </header>
         <div className="bg-white shadow p-7 flex items-center">
-asdasdasd
+        <div className="filters">
+        <input
+          type="time"
+          value={timeFilter.start}
+          onChange={(e) => setTimeFilter({ ...timeFilter, start: e.target.value })}
+          placeholder="Start Time"
+        />
+        <input
+          type="time"
+          value={timeFilter.end}
+          onChange={(e) => setTimeFilter({ ...timeFilter, end: e.target.value })}
+          placeholder="End Time"
+        />
+        <input
+          type="date"
+          value={dateFilter.start}
+          onChange={(e) => setDateFilter({ ...dateFilter, start: e.target.value })}
+          placeholder="Start Date"
+        />
+        <input
+          type="date"
+          value={dateFilter.end}
+          onChange={(e) => setDateFilter({ ...dateFilter, end: e.target.value })}
+          placeholder="End Date"
+        />
+        <input
+          type="text"
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+          placeholder="Search by Name"
+        />
+      </div>
         </div>
         <div className="flex-1 p-6 flex justify-center overflow-y-auto">
           <div className="overflow-x-auto w-full max-w-4xl">
@@ -362,7 +431,7 @@ asdasdasd
                   </td>
                 </tr>
                 {/* Empty rows */}
-                {taskData.map((invoice, index) => (
+                {filteredData.map((invoice, index) => (
                   <tr key={index} className="border-t">
                     <td className="py-3 px-6 text-left text-xs">{invoice.name}</td>
                     <td className="py-3 px-6 text-center text-xs">{invoice.vehicle}</td>
