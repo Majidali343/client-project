@@ -207,13 +207,7 @@ function Employeetask() {
         <header className="bg-white shadow p-7 flex items-center">
           <h2 className="text-xl font-bold text-[#3d3d3d] flex-1">Invoice</h2>
           <div className="flex-1 flex justify-center ml-60">
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-1/1 px-3 py-1 border rounded shadow-sm text-xs"
-            />
+           
           </div>
           <div className="w-8 h-8  cursor-pointer hover:red-300">
             <img src={Notification} alt="icon" />
@@ -376,6 +370,7 @@ function Employeetask() {
                   <td className="py-3 px-4 text-center text-xs">
                     <input
                       type="time"
+                       className="w-full py-1 px-2 border rounded"
                       value={time}
                       onChange={handleTimeChange}
                     />
