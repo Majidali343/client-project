@@ -191,7 +191,7 @@ function Employeetask() {
                   <th className="py-3 px-4 bg-gray-200 text-[#3d3d3d] text-center">Advance</th>
                   <th className="py-3 px-4 bg-gray-200 text-[#3d3d3d] text-center">Pending</th>
                   <th className="py-3 px-4 bg-gray-200 text-[#3d3d3d] text-center">Project Status</th>
-                  <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-center">Download Data</th>
+                  {/* <th className="py-3 px-12 bg-gray-200 text-[#3d3d3d] text-center">Download Data</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -222,9 +222,9 @@ function Employeetask() {
                     <td className="py-3 px-6 text-center text-xs">
                       {invoice.project_status}
                     </td>
-                    <td className="py-3 px-6 text-center text-xs"> <button className='bg-[#ea8732] p-1 rounded-md text-white font-medium'   onClick={() => downloadExcel(invoice.id)}>
+                    {/* <td className="py-3 px-6 text-center text-xs"> <button className='bg-[#ea8732] p-1 rounded-md text-white font-medium'   onClick={() => downloadExcel(invoice.id)}>
                     Download Excel
-                  </button></td>
+                  </button></td> */}
                   </tr>
                 ))}
               </tbody>
